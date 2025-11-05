@@ -2,8 +2,15 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Simulador de Monitoramento de Rede — Protótipo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
+  <meta name="theme-color" content="#0a0e1a" />
+  <meta name="description" content="Network Operations Center - Simulador de Monitoramento de Rede CCNA" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NOC Simulator" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>" />
+  <title>NOC - Network Operations Center</title>
   <style>
     :root{
       --bg:#0a0e1a;--card:#0d1117;--accent:#00d9ff;--accent-2:#00ff88;--accent-danger:#ff3366;
@@ -145,9 +152,11 @@
       padding:12px;border-radius:10px;cursor:pointer;transition:all 0.3s}
     .diagnostic-option:hover{background:rgba(0,217,255,0.15);border-color:var(--accent);
       transform:translateX(4px)}
+    /* ==================== RESPONSIVIDADE MOBILE ==================== */
     @media(max-width:1400px){
       .metrics-grid{grid-template-columns:repeat(3,1fr)}
     }
+    
     @media(max-width:1200px){
       .container{grid-template-columns:1fr;padding:0}
       .metrics-grid{grid-template-columns:repeat(3,1fr)}
@@ -160,24 +169,110 @@
         background:rgba(0,0,0,0.7);z-index:199;backdrop-filter:blur(4px)}
       .sidebar-overlay.show{display:block}
     }
+    
     @media(max-width:900px){
       .metrics-grid{grid-template-columns:repeat(2,1fr)}
       main > div[style*="grid-template-columns"]{
         grid-template-columns:1fr !important;
       }
+      .card-title{font-size:14px}
+      .topology-canvas{height:350px}
+      table{font-size:11px}
+      th, td{padding:8px 4px}
     }
+    
     @media(max-width:768px){
-      .metrics-grid{grid-template-columns:repeat(2,1fr)}
-      .metric-card .value{font-size:24px}
-      header{padding:0 12px}
-      main{padding:12px}
+      /* Header Mobile */
+      header{height:60px;padding:0 12px;gap:12px}
+      .brand{font-size:14px;flex:1}
+      .status-badge{font-size:11px;padding:6px 10px}
+      #faultBtn{font-size:12px !important;padding:8px 12px !important}
+      #exportBtn{display:none} /* Oculta botão menos crítico */
+      
+      /* Métricas Mobile */
+      .metrics-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+      .metric-card{padding:12px}
+      .metric-card .label{font-size:10px}
+      .metric-card .value{font-size:20px}
+      .metric-card .trend{font-size:11px}
+      
+      /* Container Principal */
+      .container{margin-top:60px;height:calc(100vh - 60px)}
+      main{padding:12px;gap:16px}
+      
+      /* Cards Mobile */
+      .card{padding:16px}
+      .card-title{font-size:13px;margin-bottom:12px}
+      .card-title::before{width:3px;height:16px}
+      
+      /* Topologia Mobile */
+      .topology-canvas{height:280px}
+      .node{padding:8px 12px;font-size:11px;min-width:80px}
+      
+      /* Botões Mobile */
+      button{padding:8px 14px;font-size:12px}
+      
+      /* Inputs Mobile */
+      input{padding:8px 12px;font-size:12px}
+      
+      /* Dispositivos Palette Mobile */
+      .device-palette .device{padding:8px;font-size:12px;margin-bottom:4px}
+      
+      /* Alertas Mobile */
+      .alerts{max-height:200px}
+      .alert-item{padding:10px;font-size:12px}
+      
+      /* Logs Mobile */
+      .logs{max-height:180px;font-size:11px;padding:10px}
+      
+      /* Charts Mobile */
+      .chart-container{padding:12px;min-height:160px}
+      
+      /* Footer Mobile */
+      footer{padding:16px;font-size:11px}
+      
+      /* Diagnostic Panel Mobile */
+      .diagnostic-panel{padding:16px}
+      .diagnostic-question{font-size:14px}
+      .diagnostic-option{padding:10px;font-size:12px}
+    }
+    
+    @media(max-width:480px){
+      /* Extra Small Mobile */
+      .metrics-grid{grid-template-columns:1fr;gap:8px}
+      .brand{font-size:12px}
+      header{gap:8px}
+      .status-badge{display:none} /* Oculta status em telas muito pequenas */
+      #faultBtn{width:100%;margin-top:4px}
+      
+      /* TabelasScrolláveis */
+      .card > div[style*="overflow-x"]{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+      
+      /* Botões empilhados */
+      main > div > div > div[style*="display:flex"]{
+        flex-direction:column !important;
+      }
+      
+      /* Inputs full width */
+      input{width:100% !important}
+    }
+    
+    /* Melhorias de Touch */
+    @media(hover:none){
+      button:hover{transform:none} /* Remove hover em touch devices */
+      .metric-card:hover{transform:none}
+      .card:hover{transform:none}
+      nav li:hover{transform:none}
     }
   </style>
 </head>
 <body>
   <header role="banner">
     <button class="hamburger" id="hamburger">☰</button>
-    <div class="brand">🌐 NOC — Network Operations Center</div>
+    <div class="brand">🌐 NOC</div>
     <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
       <div id="status" class="status-badge">
         <span id="statusIcon">●</span> Sistema: <strong id="statusText">OPERACIONAL</strong>
@@ -563,6 +658,195 @@
         affectedDevices: ['switch', 'host'],
         spreadPattern: 'targeted',
         solution: 'Habilitar DAI, DHCP Snooping e Port Security'
+      },
+      {
+        id: 'duplex_mismatch',
+        name: 'Duplex Mismatch',
+        description: 'Incompatibilidade de duplex entre dispositivos',
+        symptoms: [
+          '• Performance muito lenta',
+          '• Muitas colisões e CRC errors',
+          '• Retransmissões excessivas',
+          '• Late collisions no contador'
+        ],
+        question: 'Como identificar e corrigir?',
+        options: [
+          { text: 'Trocar o switch por um mais rápido', correct: false, feedback: 'Velocidade do switch não resolve configuração de duplex.' },
+          { text: 'Configurar ambos os lados para mesmo duplex (full/full ou auto/auto)', correct: true, feedback: 'Correto! Mismatch causa colisões. Ambos devem ter mesma configuração.' },
+          { text: 'Aumentar o MTU da interface', correct: false, feedback: 'MTU não resolve problema de duplex mismatch.' },
+          { text: 'Desabilitar autonegociação em todos dispositivos', correct: false, feedback: 'Auto em ambos os lados funciona. Problema é quando um é auto e outro fixo.' }
+        ],
+        affectedDevices: ['switch', 'router'],
+        spreadPattern: 'isolated',
+        solution: 'Verificar e configurar duplex/speed consistente'
+      },
+      {
+        id: 'vlan_mismatch',
+        name: 'VLAN Mismatch em Trunk',
+        description: 'VLANs não permitidas ou native VLAN diferente',
+        symptoms: [
+          '• Comunicação entre switches falha',
+          '• Alguns hosts sem conectividade',
+          '• Tráfego sendo dropado',
+          '• VLAN não propagando'
+        ],
+        question: 'Qual a causa provável?',
+        options: [
+          { text: 'Cabo crossover necessário', correct: false, feedback: 'Switches modernos têm auto-MDIX. Não é problema de cabo.' },
+          { text: 'Native VLAN diferente nos dois lados do trunk ou VLAN não permitida', correct: true, feedback: 'Correto! Native VLAN deve ser igual e VLANs devem estar no allowed list.' },
+          { text: 'Problema no firewall', correct: false, feedback: 'Firewall está na camada 3, problema é camada 2 (VLAN).' },
+          { text: 'Licença do switch expirada', correct: false, feedback: 'VLANs são feature básica, não requer licença.' }
+        ],
+        affectedDevices: ['switch'],
+        spreadPattern: 'isolated',
+        solution: 'Verificar native VLAN e allowed VLANs no trunk'
+      },
+      {
+        id: 'routing_protocol_failure',
+        name: 'Falha no Protocolo de Roteamento',
+        description: 'OSPF/EIGRP não formando adjacências',
+        symptoms: [
+          '• Rotas não sendo aprendidas',
+          '• Neighbors não aparecem',
+          '• Network unreachable',
+          '• Pacotes não roteados'
+        ],
+        question: 'O que pode estar causando?',
+        options: [
+          { text: 'Hello/Dead timers incompatíveis ou autenticação diferente', correct: true, feedback: 'Correto! Timers e auth devem ser iguais para formar adjacência.' },
+          { text: 'IP do roteador está errado', correct: false, feedback: 'Se IPs funcionam, adjacência falharia por outro motivo.' },
+          { text: 'Switch está desligado', correct: false, feedback: 'Se switch estivesse off, não haveria conectividade nenhuma.' },
+          { text: 'Firewall bloqueando HTTP', correct: false, feedback: 'Protocolos de roteamento não usam HTTP.' }
+        ],
+        affectedDevices: ['router'],
+        spreadPattern: 'cascade',
+        solution: 'Verificar hello/dead timers, auth e network statements'
+      },
+      {
+        id: 'mtu_black_hole',
+        name: 'MTU Black Hole',
+        description: 'Pacotes grandes sendo descartados silenciosamente',
+        symptoms: [
+          '• Pings pequenos funcionam',
+          '• Páginas web não carregam',
+          '• SSH/HTTP timeout',
+          '• Ping grande falha'
+        ],
+        question: 'Como resolver?',
+        options: [
+          { text: 'Desativar o roteador', correct: false, feedback: 'Desativar não resolve, piora a situação.' },
+          { text: 'Ajustar MTU ou habilitar Path MTU Discovery', correct: true, feedback: 'Correto! MTU menor ou PMTUD resolve fragmentação.' },
+          { text: 'Aumentar velocidade da interface', correct: false, feedback: 'Velocidade não afeta fragmentação de pacotes.' },
+          { text: 'Trocar protocolo para IPv6', correct: false, feedback: 'IPv6 também tem MTU. Não resolve o problema.' }
+        ],
+        affectedDevices: ['router', 'host'],
+        spreadPattern: 'isolated',
+        solution: 'Ajustar MTU nas interfaces ou habilitar PMTUD'
+      },
+      {
+        id: 'hsrp_failure',
+        name: 'Falha no HSRP/VRRP',
+        description: 'Gateway redundante não assumindo',
+        symptoms: [
+          '• Gateway não responde',
+          '• Failover não ocorre',
+          '• Standby router inativo',
+          '• Perda de conectividade'
+        ],
+        question: 'Causa mais provável?',
+        options: [
+          { text: 'Prioridade/preempt mal configurados ou hello não chegando', correct: true, feedback: 'Correto! Prioridade define ativo e preempt força takeover.' },
+          { text: 'Falta de RAM no switch', correct: false, feedback: 'HSRP roda em roteadores e usa pouca memória.' },
+          { text: 'Versão errada do Windows', correct: false, feedback: 'HSRP é protocolo de rede, independe de SO do cliente.' },
+          { text: 'DNS mal configurado', correct: false, feedback: 'HSRP é independente de DNS. Atua na camada 3.' }
+        ],
+        affectedDevices: ['router'],
+        spreadPattern: 'critical',
+        solution: 'Verificar priority, preempt e tracking de interface'
+      },
+      {
+        id: 'nat_exhaustion',
+        name: 'Exaustão de NAT/PAT',
+        description: 'Pool de NAT ou portas PAT esgotados',
+        symptoms: [
+          '• Novos usuários sem internet',
+          '• NAT translations full',
+          '• Timeout em conexões',
+          '• "No translation" nos logs'
+        ],
+        question: 'Como solucionar?',
+        options: [
+          { text: 'Desligar a internet', correct: false, feedback: 'Desligar internet não ajuda, elimina o serviço.' },
+          { text: 'Expandir pool NAT ou aumentar timeout de PAT', correct: true, feedback: 'Correto! Mais IPs públicos ou liberar portas mais rápido.' },
+          { text: 'Comprar switches mais caros', correct: false, feedback: 'NAT é função do roteador/firewall, não switch.' },
+          { text: 'Usar mais VLANs', correct: false, feedback: 'VLANs não aumentam pool de NAT/PAT.' }
+        ],
+        affectedDevices: ['router', 'firewall'],
+        spreadPattern: 'incremental',
+        solution: 'Aumentar pool NAT ou reduzir timeout de translations'
+      },
+      {
+        id: 'acl_misconfiguration',
+        name: 'ACL Mal Configurada',
+        description: 'Access List bloqueando tráfego legítimo',
+        symptoms: [
+          '• Serviços específicos não funcionam',
+          '• Alguns usuários sem acesso',
+          '• Logs de "denied" no roteador',
+          '• Ping bloqueado seletivamente'
+        ],
+        question: 'Melhor abordagem para resolver?',
+        options: [
+          { text: 'Remover todas as ACLs permanentemente', correct: false, feedback: 'Remove segurança. Precisa ajustar, não remover.' },
+          { text: 'Revisar ordem das regras e adicionar permit antes do implicit deny', correct: true, feedback: 'Correto! ACLs são processadas sequencialmente. Ordem importa!' },
+          { text: 'Aumentar bandwidth', correct: false, feedback: 'ACL bloqueia por regra, não por falta de banda.' },
+          { text: 'Reinstalar o IOS', correct: false, feedback: 'IOS não é problema. Configuração está errada.' }
+        ],
+        affectedDevices: ['router', 'firewall'],
+        spreadPattern: 'isolated',
+        solution: 'Revisar e reordenar ACL, adicionar permit específico'
+      },
+      {
+        id: 'cdp_security_risk',
+        name: 'CDP Expondo Informações',
+        description: 'Cisco Discovery Protocol habilitado expondo topologia',
+        symptoms: [
+          '• Informações de dispositivos vazando',
+          '• Atacante mapeando rede',
+          '• IOS version sendo descoberto',
+          '• Potencial reconnaissance'
+        ],
+        question: 'Qual a ação de segurança?',
+        options: [
+          { text: 'Ignorar, CDP é necessário sempre', correct: false, feedback: 'CDP útil internamente, mas risco em interfaces externas.' },
+          { text: 'Desabilitar CDP em interfaces expostas ou globalmente se não usado', correct: true, feedback: 'Correto! no cdp enable nas interfaces externas/untrusted.' },
+          { text: 'Mudar senha do switch', correct: false, feedback: 'CDP não requer autenticação. Senha não resolve.' },
+          { text: 'Usar LLDP em vez de CDP', correct: false, feedback: 'LLDP tem mesma vulnerabilidade. Também deve ser desabilitado.' }
+        ],
+        affectedDevices: ['switch', 'router'],
+        spreadPattern: 'security',
+        solution: 'no cdp enable nas interfaces externas'
+      },
+      {
+        id: 'power_over_ethernet_overload',
+        name: 'Sobrecarga de PoE',
+        description: 'Budget de PoE excedido no switch',
+        symptoms: [
+          '• Dispositivos PoE desligando',
+          '• Access Points caindo',
+          '• Telefones IP reiniciando',
+          '• PoE fault nos logs'
+        ],
+        question: 'Como resolver?',
+        options: [
+          { text: 'Aumentar voltagem na tomada', correct: false, feedback: 'Voltagem da tomada não afeta budget PoE interno do switch.' },
+          { text: 'Redistribuir dispositivos PoE ou adicionar switch PoE+', correct: true, feedback: 'Correto! Budget é limitado. Precisa distribuir ou adicionar capacity.' },
+          { text: 'Desabilitar VLAN trunk', correct: false, feedback: 'Trunk não tem relação com power budget PoE.' },
+          { text: 'Atualizar firmware dos APs', correct: false, feedback: 'Firmware não aumenta power budget do switch.' }
+        ],
+        affectedDevices: ['switch', 'host'],
+        spreadPattern: 'incremental',
+        solution: 'Balancear PoE devices ou upgrade para switch PoE+'
       }
     ];
 
@@ -1452,6 +1736,15 @@
 
     // ==================== START ====================
     document.addEventListener('DOMContentLoaded', init);
+    
+    // ==================== PWA SERVICE WORKER ====================
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
+          .catch(err => console.log('❌ Erro ao registrar Service Worker:', err));
+      });
+    }
   </script>
 </body>
 </html>

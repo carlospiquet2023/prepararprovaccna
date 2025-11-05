@@ -9,13 +9,14 @@
  * - Atualização automática
  */
 
-const CACHE_NAME = 'ccna-academy-v1.0.0';
-const RUNTIME_CACHE = 'ccna-runtime-v1.0.0';
+const CACHE_NAME = 'ccna-academy-v2.0.0';
+const RUNTIME_CACHE = 'ccna-runtime-v2.0.0';
 
 // Recursos para cache na instalação
 const PRECACHE_ASSETS = [
     '/',
     '/index.html',
+    '/simulador.html',
     '/css/styles.css',
     '/js/app.js',
     '/js/mobile-menu.js',
@@ -28,7 +29,8 @@ const PRECACHE_ASSETS = [
     '/js/subnetting.js',
     '/js/modulos.js',
     '/js/questoes_extra.js',
-    '/manifest.json'
+    '/manifest.json',
+    'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
 // Instalação do Service Worker

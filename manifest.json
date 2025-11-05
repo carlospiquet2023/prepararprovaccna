@@ -4,9 +4,9 @@
   "description": "Plataforma educacional completa para certificação Cisco CCNA com módulos teóricos, simulados, labs práticos e calculadora de subnetting",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#2563eb",
-  "orientation": "portrait-primary",
+  "background_color": "#0a0e1a",
+  "theme_color": "#00d9ff",
+  "orientation": "any",
   "scope": "/",
   "icons": [
     {
