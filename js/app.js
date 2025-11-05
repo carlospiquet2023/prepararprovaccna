@@ -58,6 +58,14 @@ const App = {
             });
         });
         
+        // Botão Monitoramento de Rede (cabeçalho)
+        const btnMonitor = document.getElementById('btnMonitor');
+        if (btnMonitor) {
+            btnMonitor.addEventListener('click', () => {
+                window.open('simulador.html', '_blank');
+            });
+        }
+        
         // Toggle sidebar
         this.elements.btnToggleSidebar.addEventListener('click', () => {
             this.toggleSidebar();
@@ -169,6 +177,11 @@ const App = {
                 case 'subnetting':
                     content = this.getSubnettingContent();
                     break;
+                case 'monitoramento':
+                    // Abrir simulador em nova aba
+                    window.open('simulador.html', '_blank');
+                    this.hideLoading();
+                    return;
                 case 'progresso':
                     content = this.getProgressoContent();
                     break;

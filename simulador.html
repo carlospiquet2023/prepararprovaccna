@@ -1,0 +1,1457 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simulador de Monitoramento de Rede — Protótipo</title>
+  <style>
+    :root{
+      --bg:#0a0e1a;--card:#0d1117;--accent:#00d9ff;--accent-2:#00ff88;--accent-danger:#ff3366;
+      --muted:#8b9dc3;--glass:rgba(255,255,255,0.04);--glow:rgba(0,217,255,0.3);
+      --warning:#ffaa00;--critical:#ff3366;--success:#00ff88;
+    }
+    *{box-sizing:border-box;font-family:'Segoe UI',Inter,Arial;margin:0;padding:0;color:#e6eef6}
+    html{overflow-x:hidden;height:100%;overflow-y:hidden}
+    body{background:#030712;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+    body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+      background:radial-gradient(circle at 20% 50%, rgba(0,217,255,0.03) 0%, transparent 50%),
+                 radial-gradient(circle at 80% 80%, rgba(255,51,102,0.03) 0%, transparent 50%);
+      pointer-events:none;z-index:0}
+    header{height:70px;display:flex;align-items:center;gap:20px;padding:0 24px;
+      background:rgba(13,17,23,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,217,255,0.1);
+      position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 4px 24px rgba(0,0,0,0.4)}
+    .brand{font-weight:700;letter-spacing:0.5px;font-size:18px;color:var(--accent);
+      text-shadow:0 0 20px var(--glow)}
+    .status-badge{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;
+      background:linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,255,136,0.05));
+      border:1px solid rgba(0,255,136,0.3);box-shadow:0 0 20px rgba(0,255,136,0.2);
+      animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+    .danger-badge{background:linear-gradient(135deg, rgba(255,51,102,0.2), rgba(255,51,102,0.05));
+      border:1px solid rgba(255,51,102,0.4);box-shadow:0 0 30px rgba(255,51,102,0.4);animation:blink 1s ease-in-out infinite}
+    .container{display:grid;grid-template-columns:280px 1fr;gap:0;position:relative;z-index:1;
+      height:calc(100vh - 70px);margin-top:70px;overflow:hidden}
+    aside{background:rgba(13,17,23,0.9);backdrop-filter:blur(20px);border-radius:0;padding:16px;
+      height:100%;overflow-y:auto;overflow-x:hidden;border-right:1px solid rgba(0,217,255,0.1);
+      box-shadow:4px 0 24px rgba(0,0,0,0.4);position:relative}
+    aside::-webkit-scrollbar{width:6px}
+    aside::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:10px}
+    aside::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+    .sidebar-overlay{display:none}
+    .hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;color:#fff}
+    nav ul{list-style:none}
+    nav li{padding:12px 14px;border-radius:10px;cursor:pointer;color:var(--muted);
+      transition:all 0.3s;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;
+      margin-bottom:4px}
+    nav li:hover{background:var(--glass);color:#fff;transform:translateX(4px)}
+    nav li.active{background:linear-gradient(135deg, rgba(0,217,255,0.15), rgba(0,217,255,0.05));
+      color:var(--accent);border-left:3px solid var(--accent)}
+    main{display:flex;flex-direction:column;gap:20px;max-width:100%;overflow-y:auto;overflow-x:hidden;
+      height:100%;padding:20px;padding-bottom:40px;position:relative}
+    main::-webkit-scrollbar{width:8px}
+    main::-webkit-scrollbar-track{background:rgba(0,0,0,0.2)}
+    main::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+    main::-webkit-scrollbar-thumb:hover{background:#00b8d9}
+    .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:0}
+    .metric-card{background:linear-gradient(135deg, rgba(0,217,255,0.08), rgba(0,217,255,0.02));
+      padding:16px;border-radius:12px;border:1px solid rgba(0,217,255,0.2);
+      box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:transform 0.3s,box-shadow 0.3s;min-width:0}
+    .metric-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,217,255,0.3)}
+    .metric-card .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+    .metric-card .value{font-size:28px;font-weight:700;color:#fff;text-shadow:0 0 10px var(--glow)}
+    .metric-card .trend{font-size:13px;margin-top:6px}
+    .trend.up{color:var(--success)}
+    .trend.down{color:var(--critical)}
+    .card{background:rgba(13,17,23,0.6);backdrop-filter:blur(20px);padding:20px;border-radius:16px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.05);
+      transition:transform 0.3s,box-shadow 0.3s;min-width:0;overflow:hidden}
+    .card:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,217,255,0.15)}
+    .card-title{font-size:16px;font-weight:600;margin-bottom:16px;color:#fff;
+      display:flex;align-items:center;gap:10px}
+    .card-title::before{content:'';width:4px;height:20px;background:var(--accent);border-radius:2px}
+    .topology-canvas{width:100%;height:500px;border-radius:12px;
+      background:radial-gradient(circle at center, rgba(0,50,80,0.3), rgba(0,20,40,0.6));
+      position:relative;overflow:hidden;border:1px solid rgba(0,217,255,0.15);
+      box-shadow:inset 0 0 40px rgba(0,0,0,0.5)}
+    .topology-canvas::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+      background-image:repeating-linear-gradient(0deg,rgba(0,217,255,0.03) 0px,transparent 1px,transparent 40px),
+                       repeating-linear-gradient(90deg,rgba(0,217,255,0.03) 0px,transparent 1px,transparent 40px);
+      pointer-events:none}
+    .node{position:absolute;padding:12px 16px;border-radius:12px;
+      background:linear-gradient(135deg, rgba(0,217,255,0.15), rgba(0,100,150,0.1));
+      border:2px solid rgba(0,217,255,0.4);cursor:move;transition:all 0.3s;
+      box-shadow:0 4px 20px rgba(0,217,255,0.3);backdrop-filter:blur(10px);font-size:12px;font-weight:600;
+      text-align:center;min-width:100px}
+    .node:hover{transform:scale(1.05);box-shadow:0 8px 30px rgba(0,217,255,0.6)}
+    .node.warning{border-color:var(--warning);box-shadow:0 4px 20px rgba(255,170,0,0.5);animation:shake 0.5s}
+    .node.critical{border-color:var(--critical);box-shadow:0 4px 20px rgba(255,51,102,0.6);animation:blink 1s ease-in-out infinite}
+    .node.healthy{border-color:var(--success);box-shadow:0 4px 20px rgba(0,255,136,0.4)}
+    .connection-line{position:absolute;height:2px;background:rgba(0,217,255,0.3);transform-origin:left center;
+      pointer-events:none;transition:all 0.3s}
+    .connection-line.active{background:var(--accent);box-shadow:0 0 10px var(--accent)}
+    .connection-line.error{background:var(--critical);box-shadow:0 0 10px var(--critical);animation:blink 1s infinite}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th{padding:10px 8px;text-align:left;font-size:11px;color:var(--accent);text-transform:uppercase;
+      letter-spacing:0.5px;border-bottom:2px solid rgba(0,217,255,0.2);white-space:nowrap}
+    td{padding:10px 8px;font-size:12px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.03);white-space:nowrap}
+    tr:hover{background:rgba(0,217,255,0.05)}
+    .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px}
+    .status-dot.up{background:var(--success);box-shadow:0 0 8px var(--success)}
+    .status-dot.down{background:var(--critical);box-shadow:0 0 8px var(--critical);animation:blink 1s infinite}
+    .status-dot.warning{background:var(--warning);box-shadow:0 0 8px var(--warning)}
+    .alerts{max-height:300px;overflow:auto;padding-right:8px}
+    .alerts::-webkit-scrollbar{width:6px}
+    .alerts::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+    .alert-item{padding:12px;border-radius:10px;margin-bottom:10px;border-left:4px solid;
+      background:rgba(255,255,255,0.03);transition:all 0.3s}
+    .alert-item:hover{background:rgba(255,255,255,0.06);transform:translateX(4px)}
+    .alert-item.critical{border-color:var(--critical);background:rgba(255,51,102,0.1)}
+    .alert-item.warning{border-color:var(--warning);background:rgba(255,170,0,0.1)}
+    .alert-item.info{border-color:var(--accent);background:rgba(0,217,255,0.1)}
+    .logs{max-height:250px;overflow:auto;font-family:'Consolas','Monaco',monospace;font-size:12px;
+      background:rgba(0,0,0,0.4);padding:12px;border-radius:10px;color:#a8dadc;line-height:1.6}
+    .logs::-webkit-scrollbar{width:6px}
+    .logs::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+    button{background:linear-gradient(135deg, rgba(0,217,255,0.2), rgba(0,217,255,0.1));
+      border:1px solid rgba(0,217,255,0.3);color:#fff;padding:10px 18px;border-radius:10px;
+      cursor:pointer;font-size:13px;font-weight:600;transition:all 0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.2)}
+    button:hover{background:linear-gradient(135deg, rgba(0,217,255,0.3), rgba(0,217,255,0.15));
+      transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,217,255,0.4)}
+    button:active{transform:translateY(0)}
+    button.danger{background:linear-gradient(135deg, rgba(255,51,102,0.3), rgba(255,51,102,0.15));
+      border-color:rgba(255,51,102,0.4)}
+    button.danger:hover{background:linear-gradient(135deg, rgba(255,51,102,0.4), rgba(255,51,102,0.2));
+      box-shadow:0 6px 20px rgba(255,51,102,0.5)}
+    input{background:rgba(0,0,0,0.3);border:1px solid rgba(0,217,255,0.2);color:#fff;
+      padding:10px 14px;border-radius:10px;font-size:13px;transition:all 0.3s}
+    input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 20px rgba(0,217,255,0.3)}
+    .chart-container{background:rgba(0,0,0,0.3);padding:16px;border-radius:12px;border:1px solid rgba(0,217,255,0.1);position:relative;min-height:200px}
+    footer{padding:20px;color:var(--muted);text-align:center;font-size:13px;
+      border-top:1px solid rgba(255,255,255,0.05);margin-top:20px;background:rgba(13,17,23,0.4)}
+    .device-palette .device{padding:10px;border-radius:10px;
+      background:linear-gradient(135deg, rgba(0,217,255,0.1), rgba(0,217,255,0.05));
+      border:1px solid rgba(0,217,255,0.2);cursor:grab;transition:all 0.3s;text-align:center;
+      font-size:13px;font-weight:600;margin-bottom:6px}
+    .device-palette .device:hover{background:linear-gradient(135deg, rgba(0,217,255,0.2), rgba(0,217,255,0.1));
+      transform:translateX(4px);box-shadow:0 4px 15px rgba(0,217,255,0.3)}
+    .device-palette .device:active{cursor:grabbing}
+    .diagnostic-panel{background:rgba(255,51,102,0.05);border:2px solid rgba(255,51,102,0.3);
+      padding:20px;border-radius:12px;margin-top:20px}
+    .diagnostic-question{font-size:16px;font-weight:600;color:#fff;margin-bottom:16px}
+    .diagnostic-options{display:flex;flex-direction:column;gap:10px}
+    .diagnostic-option{background:rgba(0,217,255,0.05);border:1px solid rgba(0,217,255,0.2);
+      padding:12px;border-radius:10px;cursor:pointer;transition:all 0.3s}
+    .diagnostic-option:hover{background:rgba(0,217,255,0.15);border-color:var(--accent);
+      transform:translateX(4px)}
+    @media(max-width:1400px){
+      .metrics-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(max-width:1200px){
+      .container{grid-template-columns:1fr;padding:0}
+      .metrics-grid{grid-template-columns:repeat(3,1fr)}
+      .hamburger{display:block}
+      aside{position:fixed;left:-280px;top:70px;z-index:200;height:calc(100vh - 70px);
+        transition:left 0.3s ease;width:280px}
+      aside.show{left:0}
+      main{padding:16px}
+      .sidebar-overlay{display:none;position:fixed;top:70px;left:0;right:0;bottom:0;
+        background:rgba(0,0,0,0.7);z-index:199;backdrop-filter:blur(4px)}
+      .sidebar-overlay.show{display:block}
+    }
+    @media(max-width:900px){
+      .metrics-grid{grid-template-columns:repeat(2,1fr)}
+      main > div[style*="grid-template-columns"]{
+        grid-template-columns:1fr !important;
+      }
+    }
+    @media(max-width:768px){
+      .metrics-grid{grid-template-columns:repeat(2,1fr)}
+      .metric-card .value{font-size:24px}
+      header{padding:0 12px}
+      main{padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <header role="banner">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="brand">🌐 NOC — Network Operations Center</div>
+    <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
+      <div id="status" class="status-badge">
+        <span id="statusIcon">●</span> Sistema: <strong id="statusText">OPERACIONAL</strong>
+      </div>
+      <button id="faultBtn" class="danger" style="padding:10px 20px;font-size:14px;animation:pulse 2s infinite">
+        ⚠️ GERAR DEFEITO
+      </button>
+      <button id="exportBtn">📊 Exportar</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside id="sidebar">
+      <nav>
+        <ul>
+          <li class="active" id="nav-overview">📊 Visão Geral</li>
+          <li id="nav-topology">🗺️ Topologia</li>
+          <li id="nav-alerts">🚨 Alertas</li>
+          <li id="nav-logs">📝 Logs</li>
+          <li id="nav-performance">⚡ Performance</li>
+        </ul>
+      </nav>
+      <hr style="margin:16px 0;border:none;border-top:1px solid rgba(0,217,255,0.1)" />
+      
+      <div style="font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:600">Dispositivos</div>
+      <div class="device-palette" id="palette">
+        <div class="device" draggable="true" data-type="host">💻 Host</div>
+        <div class="device" draggable="true" data-type="switch">🔀 Switch</div>
+        <div class="device" draggable="true" data-type="router">📡 Router</div>
+        <div class="device" draggable="true" data-type="firewall">🔥 Firewall</div>
+        <div class="device" draggable="true" data-type="server">🖥️ Server</div>
+      </div>
+      
+      <hr style="margin:16px 0;border:none;border-top:1px solid rgba(0,217,255,0.1)" />
+      
+      <div style="font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:600">Diagnóstico Rápido</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button id="runPing" style="justify-content:center">🔍 Ping</button>
+        <button id="runTraceroute" style="justify-content:center">🛤️ Traceroute</button>
+        <button id="capturePkt" style="justify-content:center">📦 Captura</button>
+        <button id="resetAll" style="justify-content:center;background:linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,255,136,0.1));border-color:rgba(0,255,136,0.3)">🔄 Resetar Rede</button>
+      </div>
+    </aside>
+
+    <main>
+      <!-- Métricas principais -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="label">Dispositivos Online</div>
+          <div class="value" id="metricDevices">0</div>
+          <div class="trend up" id="trendDevices">↗ +2 hoje</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Tráfego Total</div>
+          <div class="value" id="metricTraffic">0 Mbps</div>
+          <div class="trend" id="trendTraffic">— estável</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Alertas Críticos</div>
+          <div class="value" id="metricAlerts">0</div>
+          <div class="trend down" id="trendAlerts">↘ -1 resolvido</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Latência Média</div>
+          <div class="value" id="metricLatency">0 ms</div>
+          <div class="trend up" id="trendLatency">↗ +5ms</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Uptime</div>
+          <div class="value" id="metricUptime">99.9%</div>
+          <div class="trend up">↗ excelente</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Packet Loss</div>
+          <div class="value" id="metricLoss">0.1%</div>
+          <div class="trend up" id="trendLoss">↗ normal</div>
+        </div>
+      </div>
+
+      <!-- Topologia e Alertas -->
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-title">Mapa de Topologia — Monitoramento em Tempo Real</div>
+          <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
+            <button id="autoArrangeBtn" style="font-size:12px;padding:6px 12px">🎯 Auto Organizar</button>
+            <button id="showConnectionsBtn" style="font-size:12px;padding:6px 12px">🔗 Conexões</button>
+            <div style="margin-left:auto;font-size:12px;color:var(--muted)">Arraste dispositivos da paleta ←</div>
+          </div>
+          <div class="topology-canvas" id="canvas">
+            <svg id="connectionsSvg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></svg>
+          </div>
+          <div style="margin-top:12px;font-size:11px;color:var(--muted);text-align:right">
+            Última atualização: <span id="lastUpdate">agora</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card" style="flex:1">
+            <div class="card-title">🚨 Alertas Ativos</div>
+            <div class="alerts" id="alertsList" style="max-height:200px"></div>
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05)">
+              <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Resumo de Eventos</div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                <span>Críticos:</span><span id="countCritical" style="color:var(--critical);font-weight:600">0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                <span>Avisos:</span><span id="countWarning" style="color:var(--warning);font-weight:600">0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px">
+                <span>Info:</span><span id="countInfo" style="color:var(--accent);font-weight:600">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="flex:1">
+            <div class="card-title">📊 CPU & Memória</div>
+            <div class="chart-container">
+              <canvas id="chartResources" style="width:100%;height:180px"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painel de diagnóstico (aparece quando há defeito) -->
+      <div id="diagnosticPanel" style="display:none" class="diagnostic-panel">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+          <div>
+            <div class="diagnostic-question" id="diagnosticQuestion">⚠️ PROBLEMA DETECTADO NA REDE!</div>
+            <div style="font-size:14px;color:var(--muted);margin-top:8px" id="diagnosticDesc"></div>
+            <div style="margin-top:12px;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px;border-left:4px solid var(--critical)">
+              <div style="font-size:12px;font-weight:600;margin-bottom:6px">Sintomas Observados:</div>
+              <div id="symptomsList" style="font-size:13px;line-height:1.8"></div>
+            </div>
+          </div>
+          <div style="background:rgba(255,51,102,0.1);padding:16px;border-radius:10px;min-width:200px;text-align:center;border:2px solid var(--critical)">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:4px">TEMPO RESTANTE</div>
+            <div id="faultTimer" style="font-size:36px;font-weight:700;color:var(--critical)">60s</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">Antes de alastrar</div>
+          </div>
+        </div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:#fff">Qual é a causa raiz do problema?</div>
+        <div class="diagnostic-options" id="diagnosticOptions"></div>
+        <div id="diagnosticResult" style="margin-top:16px;padding:16px;border-radius:10px;display:none"></div>
+      </div>
+
+      <!-- Gráficos de Performance -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+        <div class="card">
+          <div class="card-title">📈 Throughput de Rede</div>
+          <div class="chart-container">
+            <canvas id="chartThroughput" style="width:100%;height:180px"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ Latência por Interface</div>
+          <div class="chart-container">
+            <canvas id="chartLatency" style="width:100%;height:180px"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">🌍 Tráfego por Protocolo</div>
+          <div class="chart-container">
+            <canvas id="chartPackets" style="width:100%;height:180px"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos adicionais -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
+        <div class="card">
+          <div class="card-title">📡 Banda por Interface</div>
+          <div class="chart-container">
+            <canvas id="chartBandwidth" style="width:100%;height:180px"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">🔄 Erros & Retransmissões</div>
+          <div class="chart-container">
+            <canvas id="chartErrors" style="width:100%;height:180px"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela de Dispositivos e Logs -->
+      <div style="display:grid;grid-template-columns:1fr 500px;gap:20px">
+        <div class="card">
+          <div class="card-title">📋 Status dos Dispositivos</div>
+          <div style="overflow-x:auto">
+            <table id="devicesTable">
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Nome</th>
+                  <th>IP</th>
+                  <th>Tipo</th>
+                  <th>Latência</th>
+                  <th>CPU</th>
+                  <th>Mem</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📝 Logs do Sistema</div>
+          <div class="logs" id="logs"></div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button id="clearLogs" style="flex:1;font-size:12px;padding:8px">🗑️ Limpar</button>
+            <button id="exportLogs" style="flex:1;font-size:12px;padding:8px">💾 Exportar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ferramentas de Diagnóstico -->
+      <div class="card">
+        <div class="card-title">🔧 Ferramentas de Diagnóstico</div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px">
+          <div>
+            <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+              <input id="toolTarget" placeholder="IP de destino (ex: 192.168.1.10)" style="flex:1;min-width:200px" />
+              <button id="btnPing">🔍 Ping</button>
+              <button id="btnTraceroute">🛤️ Traceroute</button>
+              <button id="btnDNS">🌐 DNS Lookup</button>
+            </div>
+            <pre id="toolOutput" style="background:rgba(0,0,0,0.5);padding:16px;border-radius:10px;min-height:120px;font-family:'Consolas',monospace;font-size:12px;color:#a8dadc;line-height:1.6;overflow:auto;max-height:200px">Aguardando comando...</pre>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:12px">📊 Distribuição de Pacotes</div>
+            <div class="chart-container" style="padding:12px">
+              <canvas id="chartPacketDist" style="width:100%;height:180px"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div style="font-size:14px;margin-bottom:8px">🌐 Network Operations Center — Sistema de Monitoramento Avançado</div>
+        <div style="font-size:12px">Simulador realístico com sistema de diagnóstico de falhas | Desenvolvido para treinamento CCNA</div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // ==================== ESTADO GLOBAL ====================
+    const canvas = document.getElementById('canvas');
+    const connectionsSvg = document.getElementById('connectionsSvg');
+    const devices = [];
+    const alerts = [];
+    const logEntries = [];
+    let currentFault = null;
+    let faultTimer = null;
+    let spreadTimer = null;
+    let chartThroughput, chartLatency, chartPackets, chartResources, chartBandwidth, chartErrors, chartPacketDist;
+    
+    // ==================== TIPOS DE DEFEITOS ====================
+    const FAULT_TYPES = [
+      {
+        id: 'spanning_tree_loop',
+        name: 'Loop de Spanning Tree',
+        description: 'Broadcast storm detectado na rede',
+        symptoms: [
+          '• CPU em 100% nos switches',
+          '• Tráfego de broadcast acima de 80%',
+          '• Timeouts em conexões',
+          '• LEDs piscando rapidamente'
+        ],
+        question: 'Qual é a causa raiz deste problema?',
+        options: [
+          { text: 'Cabo de rede defeituoso', correct: false, feedback: 'Cabo defeituoso causaria perda de conectividade, não loop.' },
+          { text: 'Spanning Tree Protocol desabilitado/falha', correct: true, feedback: 'Correto! STP previne loops. Sem ele, há broadcast storm.' },
+          { text: 'Configuração incorreta de VLAN', correct: false, feedback: 'VLAN incorreta causa isolamento, não loop de broadcast.' },
+          { text: 'Problema no roteador', correct: false, feedback: 'O problema está na camada 2 (switches), não na camada 3.' }
+        ],
+        affectedDevices: ['switch'],
+        spreadPattern: 'broadcast',
+        solution: 'Habilitar STP ou remover link redundante'
+      },
+      {
+        id: 'dhcp_exhaustion',
+        name: 'Exaustão de Pool DHCP',
+        description: 'Novos dispositivos não conseguem obter IP',
+        symptoms: [
+          '• Clientes sem endereço IP',
+          '• APIPA (169.254.x.x) sendo atribuído',
+          '• Pool DHCP em 100%',
+          '• Logs de "DHCP pool exhausted"'
+        ],
+        question: 'Como resolver este problema?',
+        options: [
+          { text: 'Reiniciar o servidor DHCP', correct: false, feedback: 'Reiniciar não libera IPs alocados. É paliativo.' },
+          { text: 'Expandir o range do pool DHCP ou reduzir lease time', correct: true, feedback: 'Correto! Aumenta IPs disponíveis ou libera mais rápido.' },
+          { text: 'Desabilitar IPv6', correct: false, feedback: 'IPv6 não interfere no pool DHCP v4.' },
+          { text: 'Trocar o cabo do servidor', correct: false, feedback: 'O problema é lógico (pool cheio), não físico.' }
+        ],
+        affectedDevices: ['host', 'server'],
+        spreadPattern: 'incremental',
+        solution: 'Expandir pool DHCP ou ajustar lease time'
+      },
+      {
+        id: 'routing_loop',
+        name: 'Loop de Roteamento',
+        description: 'Pacotes circulando infinitamente entre roteadores',
+        symptoms: [
+          '• Latência extremamente alta (>500ms)',
+          '• TTL expiring constantemente',
+          '• CPU alta nos roteadores',
+          '• Rotas conflitantes na tabela'
+        ],
+        question: 'Qual é a solução correta?',
+        options: [
+          { text: 'Aumentar o valor de TTL', correct: false, feedback: 'TTL é consequência, não causa. Não resolve o loop.' },
+          { text: 'Corrigir rotas estáticas conflitantes ou métricas de roteamento', correct: true, feedback: 'Correto! Loop indica rota circular que precisa ser corrigida.' },
+          { text: 'Aumentar bandwidth da interface', correct: false, feedback: 'Bandwidth não resolve roteamento circular.' },
+          { text: 'Reiniciar todos os switches', correct: false, feedback: 'Problema está nos roteadores (camada 3), não switches.' }
+        ],
+        affectedDevices: ['router'],
+        spreadPattern: 'cascade',
+        solution: 'Verificar e corrigir tabela de roteamento'
+      },
+      {
+        id: 'dns_failure',
+        name: 'Falha no Servidor DNS',
+        description: 'Resolução de nomes não está funcionando',
+        symptoms: [
+          '• Sites não carregam (timeout)',
+          '• Ping por IP funciona, por nome falha',
+          '• Servidor DNS não responde',
+          '• Erros "DNS_PROBE_FINISHED_NXDOMAIN"'
+        ],
+        question: 'Como diagnosticar e resolver?',
+        options: [
+          { text: 'Trocar todos os cabos da rede', correct: false, feedback: 'Se ping por IP funciona, conectividade está OK.' },
+          { text: 'Verificar servidor DNS, configuração de DNS nos hosts, ou usar DNS alternativo', correct: true, feedback: 'Correto! Problema específico de resolução de nomes.' },
+          { text: 'Desligar o firewall', correct: false, feedback: 'Firewall não seria seletivo apenas para DNS assim.' },
+          { text: 'Reconfigurar VLANs', correct: false, feedback: 'VLANs não afetam especificamente apenas DNS.' }
+        ],
+        affectedDevices: ['server', 'host'],
+        spreadPattern: 'isolated',
+        solution: 'Reiniciar DNS ou apontar para DNS secundário (8.8.8.8)'
+      },
+      {
+        id: 'port_security_violation',
+        name: 'Violação de Port Security',
+        description: 'Portas do switch sendo desabilitadas',
+        symptoms: [
+          '• Portas em estado err-disabled',
+          '• Hosts perdendo conectividade',
+          '• Logs de security violation',
+          '• MAC address violations detectadas'
+        ],
+        question: 'Qual a causa e solução?',
+        options: [
+          { text: 'Vírus na rede', correct: false, feedback: 'Violation específica de port-security, não comportamento de vírus.' },
+          { text: 'Mais MACs conectados que o permitido, ou MAC spoofing. Ajustar limite ou recuperar porta.', correct: true, feedback: 'Correto! Port-security limita MACs. Precisa ajustar ou fazer shutdown/no shutdown.' },
+          { text: 'Problema no cabeamento', correct: false, feedback: 'Cabo ruim não causa security violation, causa link down.' },
+          { text: 'Atualizar firmware do switch', correct: false, feedback: 'Não é bug de firmware, é política de segurança configurada.' }
+        ],
+        affectedDevices: ['switch', 'host'],
+        spreadPattern: 'incremental',
+        solution: 'shutdown/no shutdown na interface ou ajustar port-security'
+      },
+      {
+        id: 'arp_poisoning',
+        name: 'ARP Poisoning/Spoofing',
+        description: 'Ataque de envenenamento ARP detectado',
+        symptoms: [
+          '• Tráfego sendo redirecionado',
+          '• Múltiplos IPs com mesmo MAC',
+          '• Conexões intermitentes',
+          '• Man-in-the-middle detectado'
+        ],
+        question: 'Como mitigar este ataque?',
+        options: [
+          { text: 'Desconectar toda a rede', correct: false, feedback: 'Drástico e desnecessário. Há soluções mais elegantes.' },
+          { text: 'Habilitar Dynamic ARP Inspection (DAI) e IP Source Guard', correct: true, feedback: 'Correto! DAI valida ARPs contra DHCP snooping binding table.' },
+          { text: 'Aumentar velocidade das portas', correct: false, feedback: 'Velocidade não previne ataque de spoofing.' },
+          { text: 'Trocar todos os switches', correct: false, feedback: 'Hardware OK. Precisa de configuração de segurança.' }
+        ],
+        affectedDevices: ['switch', 'host'],
+        spreadPattern: 'targeted',
+        solution: 'Habilitar DAI, DHCP Snooping e Port Security'
+      }
+    ];
+
+    // ==================== INICIALIZAÇÃO ====================
+    function init() {
+      setupCharts();
+      setupEventListeners();
+      addInitialDevices();
+      startMonitoring();
+      log('✅ Sistema NOC iniciado com sucesso', 'info');
+      log('📡 Monitoramento de rede ativo', 'info');
+    }
+
+    // ==================== GRÁFICOS ====================
+    function setupCharts() {
+      const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { 
+            beginAtZero: true,
+            grid: { color: 'rgba(0,217,255,0.1)' },
+            ticks: { color: '#8b9dc3', font: { size: 10 } }
+          },
+          x: {
+            grid: { color: 'rgba(0,217,255,0.05)' },
+            ticks: { color: '#8b9dc3', font: { size: 10 } }
+          }
+        }
+      };
+
+      // Throughput
+      chartThroughput = new Chart(document.getElementById('chartThroughput'), {
+        type: 'line',
+        data: {
+          labels: Array.from({length: 20}, (_, i) => i + 's'),
+          datasets: [{
+            label: 'Mbps',
+            data: Array.from({length: 20}, () => 10 + Math.random() * 50),
+            borderColor: '#00d9ff',
+            backgroundColor: 'rgba(0,217,255,0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2
+          }]
+        },
+        options: commonOptions
+      });
+
+      // Latência
+      chartLatency = new Chart(document.getElementById('chartLatency'), {
+        type: 'bar',
+        data: {
+          labels: ['eth0', 'eth1', 'eth2', 'wlan0'],
+          datasets: [{
+            label: 'ms',
+            data: [12, 19, 8, 15],
+            backgroundColor: ['#00d9ff', '#00ff88', '#ffaa00', '#ff3366'],
+            borderRadius: 6
+          }]
+        },
+        options: commonOptions
+      });
+
+      // Pacotes por protocolo
+      chartPackets = new Chart(document.getElementById('chartPackets'), {
+        type: 'doughnut',
+        data: {
+          labels: ['TCP', 'UDP', 'ICMP', 'Outros'],
+          datasets: [{
+            data: [45, 30, 15, 10],
+            backgroundColor: ['#00d9ff', '#00ff88', '#ffaa00', '#ff3366']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#8b9dc3', font: { size: 9 } }
+            }
+          }
+        }
+      });
+
+      // CPU e Memória
+      chartResources = new Chart(document.getElementById('chartResources'), {
+        type: 'line',
+        data: {
+          labels: Array.from({length: 15}, (_, i) => i + 's'),
+          datasets: [
+            {
+              label: 'CPU %',
+              data: Array.from({length: 15}, () => 20 + Math.random() * 30),
+              borderColor: '#ff3366',
+              backgroundColor: 'rgba(255,51,102,0.1)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2
+            },
+            {
+              label: 'Mem %',
+              data: Array.from({length: 15}, () => 40 + Math.random() * 20),
+              borderColor: '#00ff88',
+              backgroundColor: 'rgba(0,255,136,0.1)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          ...commonOptions,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: { color: '#8b9dc3', font: { size: 10 } }
+            }
+          }
+        }
+      });
+
+      // Banda por Interface
+      chartBandwidth = new Chart(document.getElementById('chartBandwidth'), {
+        type: 'bar',
+        data: {
+          labels: ['eth0', 'eth1', 'eth2', 'wlan0', 'eth3'],
+          datasets: [
+            {
+              label: 'TX (Mbps)',
+              data: [45, 32, 28, 15, 38],
+              backgroundColor: '#00d9ff'
+            },
+            {
+              label: 'RX (Mbps)',
+              data: [38, 28, 25, 12, 35],
+              backgroundColor: '#00ff88'
+            }
+          ]
+        },
+        options: {
+          ...commonOptions,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: { color: '#8b9dc3', font: { size: 10 } }
+            }
+          }
+        }
+      });
+
+      // Erros e Retransmissões
+      chartErrors = new Chart(document.getElementById('chartErrors'), {
+        type: 'line',
+        data: {
+          labels: Array.from({length: 20}, (_, i) => i + 's'),
+          datasets: [
+            {
+              label: 'Erros',
+              data: Array.from({length: 20}, () => Math.random() * 5),
+              borderColor: '#ff3366',
+              backgroundColor: 'rgba(255,51,102,0.1)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2
+            },
+            {
+              label: 'Retrans',
+              data: Array.from({length: 20}, () => Math.random() * 3),
+              borderColor: '#ffaa00',
+              backgroundColor: 'rgba(255,170,0,0.1)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          ...commonOptions,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: { color: '#8b9dc3', font: { size: 10 } }
+            }
+          }
+        }
+      });
+
+      // Distribuição de Pacotes
+      chartPacketDist = new Chart(document.getElementById('chartPacketDist'), {
+        type: 'polarArea',
+        data: {
+          labels: ['HTTP', 'HTTPS', 'SSH', 'FTP', 'DNS'],
+          datasets: [{
+            data: [35, 45, 10, 5, 15],
+            backgroundColor: [
+              'rgba(0,217,255,0.6)',
+              'rgba(0,255,136,0.6)',
+              'rgba(255,170,0,0.6)',
+              'rgba(255,51,102,0.6)',
+              'rgba(138,43,226,0.6)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#8b9dc3', font: { size: 9 } }
+            }
+          }
+        }
+      });
+    }
+
+    // ==================== MONITORAMENTO ====================
+    function startMonitoring() {
+      // Atualizar gráficos
+      setInterval(() => {
+        // Throughput
+        chartThroughput.data.datasets[0].data.shift();
+        const newValue = currentFault ? 5 + Math.random() * 20 : 10 + Math.random() * 50;
+        chartThroughput.data.datasets[0].data.push(newValue);
+        chartThroughput.update('none');
+
+        // CPU e Memória
+        chartResources.data.datasets[0].data.shift();
+        chartResources.data.datasets[1].data.shift();
+        const cpuValue = currentFault ? 70 + Math.random() * 30 : 20 + Math.random() * 30;
+        const memValue = currentFault ? 60 + Math.random() * 30 : 40 + Math.random() * 20;
+        chartResources.data.datasets[0].data.push(cpuValue);
+        chartResources.data.datasets[1].data.push(memValue);
+        chartResources.update('none');
+
+        // Erros
+        chartErrors.data.datasets[0].data.shift();
+        chartErrors.data.datasets[1].data.shift();
+        const errValue = currentFault ? Math.random() * 20 : Math.random() * 5;
+        const retransValue = currentFault ? Math.random() * 15 : Math.random() * 3;
+        chartErrors.data.datasets[0].data.push(errValue);
+        chartErrors.data.datasets[1].data.push(retransValue);
+        chartErrors.update('none');
+
+        // Atualizar métricas
+        updateMetrics();
+      }, 2000);
+
+      // Simular eventos aleatórios
+      setInterval(() => {
+        if (!currentFault && Math.random() > 0.95) {
+          createAlert('info', `Backup automático iniciado em ${randomDevice()?.ip || '192.168.1.1'}`);
+        }
+      }, 15000);
+    }
+
+    function updateMetrics() {
+      const onlineDevices = devices.filter(d => d.status === 'up').length;
+      document.getElementById('metricDevices').textContent = onlineDevices;
+      
+      const traffic = currentFault ? (5 + Math.random() * 15).toFixed(1) : (20 + Math.random() * 40).toFixed(1);
+      document.getElementById('metricTraffic').textContent = traffic + ' Mbps';
+      
+      const criticalCount = alerts.filter(a => a.level === 'critical').length;
+      document.getElementById('metricAlerts').textContent = criticalCount;
+      
+      const latency = currentFault ? (50 + Math.random() * 200).toFixed(0) : (8 + Math.random() * 12).toFixed(0);
+      document.getElementById('metricLatency').textContent = latency + ' ms';
+      
+      const loss = currentFault ? (5 + Math.random() * 15).toFixed(1) : (Math.random() * 0.5).toFixed(1);
+      document.getElementById('metricLoss').textContent = loss + '%';
+      
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    }
+
+    // ==================== DISPOSITIVOS ====================
+    function addDevice(type, x = 40, y = 40) {
+      const id = type + '-' + Math.floor(Math.random() * 999);
+      const ip = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 254) + 1}`;
+      
+      const node = document.createElement('div');
+      node.className = 'node healthy';
+      node.style.left = x + 'px';
+      node.style.top = y + 'px';
+      node.dataset.id = id;
+      node.dataset.ip = ip;
+      node.dataset.type = type;
+      
+      const icon = { host: '💻', switch: '🔀', router: '📡', firewall: '🔥', server: '🖥️' }[type] || '📦';
+      node.innerHTML = `<div style="font-size:20px;margin-bottom:4px">${icon}</div><div style="font-size:11px">${id}</div><div style="font-size:10px;color:var(--muted)">${ip}</div>`;
+      
+      canvas.appendChild(node);
+      
+      const device = {
+        id, type, ip, x, y,
+        status: 'up',
+        cpu: Math.floor(Math.random() * 30),
+        memory: Math.floor(20 + Math.random() * 40),
+        latency: Math.floor(5 + Math.random() * 15)
+      };
+      
+      devices.push(device);
+      makeDraggable(node);
+      refreshDevicesTable();
+      drawConnections();
+      updateMetrics();
+      
+      log(`➕ Dispositivo adicionado: ${id} (${ip})`, 'info');
+    }
+
+    function removeDevice(id) {
+      const index = devices.findIndex(d => d.id === id);
+      if (index !== -1) {
+        devices.splice(index, 1);
+        const node = canvas.querySelector(`[data-id="${id}"]`);
+        if (node) node.remove();
+        refreshDevicesTable();
+        drawConnections();
+        updateMetrics();
+      }
+    }
+
+    function updateDeviceStatus(device, status) {
+      device.status = status;
+      const node = canvas.querySelector(`[data-id="${device.id}"]`);
+      if (node) {
+        node.className = 'node';
+        if (status === 'up') node.classList.add('healthy');
+        else if (status === 'warning') node.classList.add('warning');
+        else if (status === 'down') node.classList.add('critical');
+      }
+      refreshDevicesTable();
+    }
+
+    function refreshDevicesTable() {
+      const tbody = document.querySelector('#devicesTable tbody');
+      tbody.innerHTML = '';
+      
+      devices.forEach(d => {
+        const tr = document.createElement('tr');
+        const statusClass = d.status === 'up' ? 'up' : (d.status === 'warning' ? 'warning' : 'down');
+        tr.innerHTML = `
+          <td><span class="status-dot ${statusClass}"></span></td>
+          <td>${d.id}</td>
+          <td>${d.ip}</td>
+          <td>${d.type}</td>
+          <td>${d.latency || '-'} ms</td>
+          <td>${d.cpu || '-'}%</td>
+          <td>${d.memory || '-'}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addInitialDevices() {
+      addDevice('router', 250, 40);
+      addDevice('switch', 100, 160);
+      addDevice('switch', 400, 160);
+      addDevice('firewall', 250, 280);
+      addDevice('server', 50, 380);
+      addDevice('host', 450, 380);
+      addDevice('host', 150, 440);
+      addDevice('host', 350, 440);
+    }
+
+    function drawConnections() {
+      connectionsSvg.innerHTML = '';
+      
+      if (devices.length < 2) return;
+      
+      // Conectar switches a router
+      const routers = devices.filter(d => d.type === 'router');
+      const switches = devices.filter(d => d.type === 'switch');
+      
+      routers.forEach(router => {
+        switches.forEach(sw => {
+          drawLine(router, sw, currentFault ? 'error' : 'active');
+        });
+      });
+      
+      // Conectar hosts a switches
+      const hosts = devices.filter(d => d.type === 'host' || d.type === 'server');
+      hosts.forEach(host => {
+        const nearestSwitch = findNearestDevice(host, switches);
+        if (nearestSwitch) {
+          drawLine(host, nearestSwitch, currentFault && Math.random() > 0.5 ? 'error' : 'normal');
+        }
+      });
+    }
+
+    function drawLine(dev1, dev2, status = 'normal') {
+      const node1 = canvas.querySelector(`[data-id="${dev1.id}"]`);
+      const node2 = canvas.querySelector(`[data-id="${dev2.id}"]`);
+      if (!node1 || !node2) return;
+      
+      const x1 = parseInt(node1.style.left) + node1.offsetWidth / 2;
+      const y1 = parseInt(node1.style.top) + node1.offsetHeight / 2;
+      const x2 = parseInt(node2.style.left) + node2.offsetWidth / 2;
+      const y2 = parseInt(node2.style.top) + node2.offsetHeight / 2;
+      
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      line.setAttribute('stroke', status === 'error' ? '#ff3366' : (status === 'active' ? '#00d9ff' : 'rgba(0,217,255,0.3)'));
+      line.setAttribute('stroke-width', status === 'error' ? '3' : '2');
+      line.setAttribute('stroke-dasharray', status === 'error' ? '5,5' : '0');
+      
+      connectionsSvg.appendChild(line);
+    }
+
+    function findNearestDevice(device, candidates) {
+      if (candidates.length === 0) return null;
+      return candidates.reduce((nearest, candidate) => {
+        const distToCandidate = Math.hypot(device.x - candidate.x, device.y - candidate.y);
+        const distToNearest = nearest ? Math.hypot(device.x - nearest.x, device.y - nearest.y) : Infinity;
+        return distToCandidate < distToNearest ? candidate : nearest;
+      }, null);
+    }
+
+    // ==================== SISTEMA DE DEFEITOS ====================
+    function generateFault() {
+      if (currentFault) {
+        createAlert('warning', 'Já existe um defeito ativo! Resolva-o primeiro.');
+        return;
+      }
+      
+      const fault = FAULT_TYPES[Math.floor(Math.random() * FAULT_TYPES.length)];
+      currentFault = fault;
+      
+      log(`🚨 DEFEITO GERADO: ${fault.name}`, 'critical');
+      createAlert('critical', `PROBLEMA DETECTADO: ${fault.name}`);
+      
+      // Aplicar defeito nos dispositivos afetados
+      applyFault(fault);
+      
+      // Mostrar painel de diagnóstico
+      showDiagnosticPanel(fault);
+      
+      // Iniciar timer
+      startFaultTimer(60);
+      
+      // Status badge
+      const statusBadge = document.getElementById('status');
+      statusBadge.className = 'danger-badge';
+      document.getElementById('statusText').textContent = 'FALHA DETECTADA';
+      document.getElementById('statusIcon').textContent = '⚠️';
+    }
+
+    function applyFault(fault) {
+      const affectedDevices = devices.filter(d => fault.affectedDevices.includes(d.type));
+      
+      affectedDevices.forEach((device, index) => {
+        setTimeout(() => {
+          updateDeviceStatus(device, 'warning');
+          device.cpu = 70 + Math.random() * 30;
+          log(`⚠️ ${device.id}: ${fault.symptoms[0]}`, 'warning');
+          createAlert('warning', `${device.id} apresentando sintomas anormais`);
+        }, index * 2000);
+      });
+      
+      drawConnections();
+    }
+
+    function spreadFault() {
+      if (!currentFault) return;
+      
+      const healthyDevices = devices.filter(d => d.status === 'up');
+      if (healthyDevices.length === 0) return;
+      
+      const victim = healthyDevices[Math.floor(Math.random() * healthyDevices.length)];
+      updateDeviceStatus(victim, 'down');
+      victim.cpu = 100;
+      
+      log(`❌ ${victim.id}: FALHOU devido ao problema não resolvido!`, 'critical');
+      createAlert('critical', `${victim.id} offline! O problema está se alastrando!`);
+      
+      drawConnections();
+    }
+
+    function showDiagnosticPanel(fault) {
+      const panel = document.getElementById('diagnosticPanel');
+      panel.style.display = 'block';
+      
+      document.getElementById('diagnosticQuestion').textContent = `⚠️ ${fault.name.toUpperCase()}`;
+      document.getElementById('diagnosticDesc').textContent = fault.description;
+      
+      const symptomsList = document.getElementById('symptomsList');
+      symptomsList.innerHTML = fault.symptoms.map(s => `<div>${s}</div>`).join('');
+      
+      const optionsContainer = document.getElementById('diagnosticOptions');
+      optionsContainer.innerHTML = '';
+      
+      fault.options.forEach((option, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'diagnostic-option';
+        btn.textContent = `${String.fromCharCode(65 + index)}) ${option.text}`;
+        btn.onclick = () => checkAnswer(option, fault);
+        optionsContainer.appendChild(btn);
+      });
+      
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function checkAnswer(option, fault) {
+      clearInterval(faultTimer);
+      clearInterval(spreadTimer);
+      
+      const resultDiv = document.getElementById('diagnosticResult');
+      resultDiv.style.display = 'block';
+      
+      if (option.correct) {
+        resultDiv.style.background = 'linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,255,136,0.1))';
+        resultDiv.style.borderLeft = '4px solid var(--success)';
+        resultDiv.innerHTML = `
+          <div style="font-size:18px;font-weight:700;color:var(--success);margin-bottom:8px">✅ CORRETO!</div>
+          <div style="font-size:14px;margin-bottom:12px">${option.feedback}</div>
+          <div style="font-size:13px;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px">
+            <strong>Solução aplicada:</strong> ${fault.solution}
+          </div>
+        `;
+        
+        // Resolver o problema
+        resolveFault();
+        log(`✅ Problema resolvido: ${fault.name}`, 'info');
+        createAlert('info', `Problema resolvido com sucesso! Rede voltando ao normal.`);
+        
+      } else {
+        resultDiv.style.background = 'linear-gradient(135deg, rgba(255,51,102,0.2), rgba(255,51,102,0.1))';
+        resultDiv.style.borderLeft = '4px solid var(--critical)';
+        resultDiv.innerHTML = `
+          <div style="font-size:18px;font-weight:700;color:var(--critical);margin-bottom:8px">❌ INCORRETO!</div>
+          <div style="font-size:14px;margin-bottom:12px">${option.feedback}</div>
+          <div style="font-size:13px;color:var(--warning)">O problema continua se alastrando pela rede! Tente novamente.</div>
+        `;
+        
+        // Piorar situação
+        spreadFault();
+        startFaultTimer(30); // Menos tempo na segunda chance
+      }
+    }
+
+    function startFaultTimer(seconds) {
+      let remaining = seconds;
+      const timerDisplay = document.getElementById('faultTimer');
+      
+      faultTimer = setInterval(() => {
+        remaining--;
+        timerDisplay.textContent = remaining + 's';
+        
+        if (remaining <= 0) {
+          clearInterval(faultTimer);
+          timerDisplay.textContent = 'TEMPO ESGOTADO!';
+          spreadFault();
+          log('⏰ Tempo esgotado! Problema se alastrou.', 'critical');
+        }
+      }, 1000);
+      
+      // Spread periodicamente
+      spreadTimer = setInterval(() => {
+        spreadFault();
+      }, 15000);
+    }
+
+    function resolveFault() {
+      // Restaurar todos os dispositivos
+      devices.forEach(device => {
+        updateDeviceStatus(device, 'up');
+        device.cpu = Math.floor(Math.random() * 30);
+      });
+      
+      currentFault = null;
+      
+      // Esconder painel após 5s
+      setTimeout(() => {
+        document.getElementById('diagnosticPanel').style.display = 'none';
+      }, 5000);
+      
+      // Restaurar status badge
+      const statusBadge = document.getElementById('status');
+      statusBadge.className = 'status-badge';
+      document.getElementById('statusText').textContent = 'OPERACIONAL';
+      document.getElementById('statusIcon').textContent = '●';
+      
+      drawConnections();
+      refreshDevicesTable();
+      updateMetrics();
+    }
+
+    // ==================== ALERTAS E LOGS ====================
+    function createAlert(level, text) {
+      const alert = {
+        id: Date.now(),
+        level,
+        text,
+        timestamp: new Date()
+      };
+      
+      alerts.unshift(alert);
+      renderAlerts();
+      updateMetrics();
+    }
+
+    function renderAlerts() {
+      const container = document.getElementById('alertsList');
+      container.innerHTML = '';
+      
+      alerts.slice(0, 10).forEach(alert => {
+        const div = document.createElement('div');
+        div.className = `alert-item ${alert.level}`;
+        const icon = { critical: '🔴', warning: '⚠️', info: 'ℹ️' }[alert.level] || 'ℹ️';
+        div.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:start">
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px">${icon} ${alert.level.toUpperCase()}</div>
+              <div style="font-size:12px;color:#e6eef6">${alert.text}</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px">${alert.timestamp.toLocaleTimeString()}</div>
+        `;
+        container.appendChild(div);
+      });
+      
+      document.getElementById('countCritical').textContent = alerts.filter(a => a.level === 'critical').length;
+      document.getElementById('countWarning').textContent = alerts.filter(a => a.level === 'warning').length;
+      document.getElementById('countInfo').textContent = alerts.filter(a => a.level === 'info').length;
+    }
+
+    function log(text, level = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const icon = { critical: '🔴', warning: '⚠️', info: '✓' }[level] || 'ℹ';
+      const entry = `[${timestamp}] ${icon} ${text}`;
+      
+      logEntries.unshift(entry);
+      
+      const logsEl = document.getElementById('logs');
+      logsEl.textContent = logEntries.slice(0, 50).join('\n');
+      logsEl.scrollTop = 0;
+    }
+
+    // ==================== DRAG & DROP ====================
+    const palette = document.getElementById('palette');
+    palette.querySelectorAll('.device').forEach(el => {
+      el.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', el.dataset.type);
+      });
+    });
+
+    canvas.addEventListener('dragover', e => e.preventDefault());
+    canvas.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('text/plain');
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left - 50;
+      const y = e.clientY - rect.top - 25;
+      addDevice(type, x, y);
+    });
+
+    function makeDraggable(node) {
+      let isDragging = false;
+      let offsetX, offsetY;
+      
+      node.addEventListener('mousedown', e => {
+        isDragging = true;
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;
+        node.style.cursor = 'grabbing';
+      });
+      
+      document.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const rect = canvas.getBoundingClientRect();
+        let x = e.clientX - rect.left - offsetX;
+        let y = e.clientY - rect.top - offsetY;
+        
+        x = Math.max(0, Math.min(x, canvas.offsetWidth - node.offsetWidth));
+        y = Math.max(0, Math.min(y, canvas.offsetHeight - node.offsetHeight));
+        
+        node.style.left = x + 'px';
+        node.style.top = y + 'px';
+        
+        const device = devices.find(d => d.id === node.dataset.id);
+        if (device) {
+          device.x = x;
+          device.y = y;
+        }
+        
+        drawConnections();
+      });
+      
+      document.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          node.style.cursor = 'move';
+        }
+      });
+    }
+
+    // ==================== FERRAMENTAS ====================
+    document.getElementById('btnPing').addEventListener('click', () => {
+      const target = document.getElementById('toolTarget').value || '192.168.1.1';
+      let output = `PING ${target} (56 data bytes)\n`;
+      
+      for (let i = 1; i <= 4; i++) {
+        const time = currentFault ? (100 + Math.random() * 300).toFixed(2) : (Math.random() * 30).toFixed(2);
+        output += `64 bytes from ${target}: icmp_seq=${i} ttl=64 time=${time} ms\n`;
+      }
+      
+      const loss = currentFault ? 50 : 0;
+      output += `\n--- ${target} ping statistics ---\n4 packets transmitted, ${4 - (loss/25)} received, ${loss}% packet loss`;
+      
+      document.getElementById('toolOutput').textContent = output;
+      log(`🔍 Ping executado para ${target}`, 'info');
+    });
+
+    document.getElementById('btnTraceroute').addEventListener('click', () => {
+      const target = document.getElementById('toolTarget').value || '8.8.8.8';
+      let output = `traceroute to ${target}, 30 hops max:\n\n`;
+      
+      for (let i = 1; i <= 8; i++) {
+        const ip = `10.0.${i}.${Math.floor(1 + Math.random() * 254)}`;
+        const time = (5 + Math.random() * 40).toFixed(2);
+        output += `${i}  ${ip}  ${time} ms\n`;
+      }
+      
+      document.getElementById('toolOutput').textContent = output;
+      log(`🛤️ Traceroute executado para ${target}`, 'info');
+    });
+
+    document.getElementById('btnDNS').addEventListener('click', () => {
+      const target = document.getElementById('toolTarget').value || 'google.com';
+      const output = currentFault && currentFault.id === 'dns_failure' 
+        ? `DNS lookup failed: No response from DNS server\nError: DNS_PROBE_FINISHED_NXDOMAIN`
+        : `DNS lookup for ${target}:\n\n${target} has address 142.250.185.46\n${target} has IPv6 address 2800:3f0:4001:809::200e\n\nQuery time: 23 msec\nSERVER: 8.8.8.8#53`;
+      
+      document.getElementById('toolOutput').textContent = output;
+      log(`🌐 DNS lookup para ${target}`, 'info');
+    });
+
+    // ==================== EVENT LISTENERS ====================
+    function setupEventListeners() {
+      document.getElementById('faultBtn').addEventListener('click', generateFault);
+      
+      document.getElementById('hamburger').addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+      });
+      
+      // Fechar sidebar ao clicar no overlay
+      document.getElementById('sidebarOverlay').addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      });
+      
+      document.getElementById('exportBtn').addEventListener('click', () => {
+        let csv = 'id,ip,type,status,cpu,memory,latency\n';
+        devices.forEach(d => {
+          csv += `${d.id},${d.ip},${d.type},${d.status},${d.cpu},${d.memory},${d.latency}\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `network-status-${Date.now()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        log('📊 Relatório CSV exportado', 'info');
+      });
+      
+      document.getElementById('clearLogs').addEventListener('click', () => {
+        logEntries.length = 0;
+        document.getElementById('logs').textContent = '';
+        log('🗑️ Logs limpos', 'info');
+      });
+      
+      document.getElementById('exportLogs').addEventListener('click', () => {
+        const blob = new Blob([logEntries.join('\n')], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `logs-${Date.now()}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+      
+      document.getElementById('autoArrangeBtn').addEventListener('click', () => {
+        devices.forEach((device, i) => {
+          const angle = (i / devices.length) * Math.PI * 2;
+          const radius = 180;
+          device.x = 250 + Math.cos(angle) * radius;
+          device.y = 250 + Math.sin(angle) * radius;
+          
+          const node = canvas.querySelector(`[data-id="${device.id}"]`);
+          if (node) {
+            node.style.left = device.x + 'px';
+            node.style.top = device.y + 'px';
+          }
+        });
+        drawConnections();
+        log('🎯 Dispositivos organizados automaticamente', 'info');
+      });
+      
+      document.getElementById('showConnectionsBtn').addEventListener('click', () => {
+        drawConnections();
+        log('🔗 Conexões atualizadas', 'info');
+      });
+      
+      document.getElementById('runPing').addEventListener('click', () => {
+        const target = '192.168.1.1';
+        let output = `PING ${target} (56 data bytes)\n`;
+        
+        for (let i = 1; i <= 4; i++) {
+          const time = currentFault ? (100 + Math.random() * 300).toFixed(2) : (Math.random() * 30).toFixed(2);
+          output += `64 bytes from ${target}: icmp_seq=${i} ttl=64 time=${time} ms\n`;
+        }
+        
+        const loss = currentFault ? 50 : 0;
+        output += `\n--- ${target} ping statistics ---\n4 packets transmitted, ${4 - (loss/25)} received, ${loss}% packet loss`;
+        
+        log(`🔍 Ping executado para ${target}`, 'info');
+        log(output, 'info');
+      });
+      
+      document.getElementById('runTraceroute').addEventListener('click', () => {
+        const target = '8.8.8.8';
+        let output = `traceroute to ${target}, 30 hops max:\n\n`;
+        
+        for (let i = 1; i <= 8; i++) {
+          const ip = `10.0.${i}.${Math.floor(1 + Math.random() * 254)}`;
+          const time = (5 + Math.random() * 40).toFixed(2);
+          output += `${i}  ${ip}  ${time} ms\n`;
+        }
+        
+        log(`🛤️ Traceroute executado para ${target}`, 'info');
+        log(output, 'info');
+      });
+      
+      document.getElementById('capturePkt').addEventListener('click', () => {
+        log('📦 Iniciando captura de pacotes...', 'info');
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            const src = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 254) + 1}`;
+            const dst = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 254) + 1}`;
+            const proto = ['TCP', 'UDP', 'ICMP'][Math.floor(Math.random() * 3)];
+            const len = Math.floor(60 + Math.random() * 1400);
+            log(`PKT: ${src} → ${dst} [${proto}] ${len} bytes`, 'info');
+          }, i * 500);
+        }
+      });
+      
+      document.getElementById('resetAll').addEventListener('click', () => {
+        if (confirm('Resetar toda a rede? Isso limpará todos os dispositivos e alertas.')) {
+          devices.forEach(d => removeDevice(d.id));
+          alerts.length = 0;
+          renderAlerts();
+          currentFault = null;
+          clearInterval(faultTimer);
+          clearInterval(spreadTimer);
+          document.getElementById('diagnosticPanel').style.display = 'none';
+          
+          const statusBadge = document.getElementById('status');
+          statusBadge.className = 'status-badge';
+          document.getElementById('statusText').textContent = 'OPERACIONAL';
+          
+          addInitialDevices();
+          log('🔄 Rede resetada com sucesso', 'info');
+        }
+      });
+    }
+
+    function randomDevice() {
+      return devices[Math.floor(Math.random() * devices.length)];
+    }
+
+    // ==================== START ====================
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

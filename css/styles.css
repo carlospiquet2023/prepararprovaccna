@@ -162,6 +162,28 @@ body:not(.dark-theme) .menu-item.active * {
     color: var(--text-secondary);
 }
 
+.btn-monitor {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #00d9ff, #00b8d9);
+    color: #ffffff !important;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 217, 255, 0.3);
+}
+
+.btn-monitor:hover {
+    background: linear-gradient(135deg, #00b8d9, #009ab8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 217, 255, 0.4);
+}
+
 .btn-config {
     padding: 0.5rem;
     font-size: 1.25rem;
@@ -6250,6 +6272,17 @@ body .sidebar.collapsed ~ .site-footer {
         padding: 0.75rem;
         min-width: 48px;
         min-height: 48px;
+    }
+    
+    .btn-monitor {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        min-width: 48px;
+        min-height: 44px;
+    }
+    
+    .user-name {
+        display: none;
     }
 }
 
