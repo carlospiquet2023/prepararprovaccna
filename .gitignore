@@ -1,0 +1,40 @@
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node.js (caso adicione no futuro)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Logs
+*.log
+logs/
+
+# Backups
+*.bak
+*.tmp
+*.temp
+
+# Dados de usuário locais (se aplicável)
+data/
+backups/
+user-data/
+
+# Arquivos de configuração local
+config.local.js
+.env
+.env.local
+
+# Build (caso adicione build process)
+dist/
+build/

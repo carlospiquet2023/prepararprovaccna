@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia de Redes - CCNA</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🌐</span>
+                <h1>Academia de Redes</h1>
+            </div>
+            <div class="user-info">
+                <span class="user-name">Estudante CCNA</span>
+                <button class="btn-config" id="btnConfig">⚙️</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Layout Principal -->
+    <div class="main-layout">
+        <!-- Menu Lateral -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="menu-list">
+                    <li class="menu-item active" data-page="dashboard">
+                        <span class="menu-icon">📊</span>
+                        <span class="menu-text">Dashboard</span>
+                    </li>
+                    <li class="menu-item" data-page="modulos">
+                        <span class="menu-icon">📚</span>
+                        <span class="menu-text">Módulos Teóricos</span>
+                    </li>
+                    <li class="menu-item" data-page="quiz">
+                        <span class="menu-icon">❓</span>
+                        <span class="menu-text">Quiz</span>
+                    </li>
+                    <li class="menu-item" data-page="simulados">
+                        <span class="menu-icon">📝</span>
+                        <span class="menu-text">Simulados</span>
+                    </li>
+                    <li class="menu-item" data-page="labs">
+                        <span class="menu-icon">🔬</span>
+                        <span class="menu-text">Labs Práticos</span>
+                    </li>
+                    <li class="menu-item" data-page="subnetting">
+                        <span class="menu-icon">🔢</span>
+                        <span class="menu-text">Simulador Subnetting</span>
+                    </li>
+                    <li class="menu-item" data-page="progresso">
+                        <span class="menu-icon">💾</span>
+                        <span class="menu-text">Meu Progresso</span>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="btn-toggle-sidebar" id="btnToggleSidebar">
+                    <span>◀</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Área de Conteúdo Dinâmico -->
+        <main class="content-area" id="contentArea">
+            <!-- O conteúdo será carregado dinamicamente aqui -->
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Carregando...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Configurações -->
+    <div class="modal" id="modalConfig">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Configurações</h2>
+                <button class="btn-close-modal" id="btnCloseModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="config-section">
+                    <h3>Tema</h3>
+                    <select id="selectTheme" class="form-control">
+                        <option value="light">Claro</option>
+                        <option value="dark">Escuro</option>
+                    </select>
+                </div>
+                <div class="config-section">
+                    <h3>Dados</h3>
+                    <button class="btn btn-secondary" id="btnExportData">Exportar Progresso</button>
+                    <button class="btn btn-secondary" id="btnImportData">Importar Progresso</button>
+                    <input type="file" id="fileImport" accept=".json" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/simulados.js"></script>
+    <script src="js/labs.js"></script>
+    <script src="js/subnetting.js"></script>
+    <script src="js/modulos.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

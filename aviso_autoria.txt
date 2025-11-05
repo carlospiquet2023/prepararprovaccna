@@ -1,0 +1,181 @@
+================================================================================
+                          AVISO DE AUTORIA E COPYRIGHT
+================================================================================
+
+SOFTWARE: Academia de Redes - Sistema Educacional CCNA
+AUTOR: Carlos Antonio de Oliveira Piquet
+QUALIFICAÇÃO: Aluno de Redes de Computadores e Estudante de MBA em Inteligência Artificial
+E-MAIL: carlospiquet.projetos@gmail.com
+
+================================================================================
+                        © 2025 TODOS OS DIREITOS RESERVADOS
+                              ALL RIGHTS RESERVED
+================================================================================
+
+DECLARAÇÃO DE AUTORIA
+----------------------
+
+Este software, incluindo todo o código-fonte, design, conteúdo educacional, 
+documentação e elementos gráficos, é de autoria exclusiva de Carlos Antonio 
+de Oliveira Piquet, protegido pelas leis brasileiras e internacionais de 
+direitos autorais.
+
+
+PROTEÇÃO LEGAL
+--------------
+
+Este software está protegido por:
+
+• Lei nº 9.610/1998 (Lei de Direitos Autorais)
+• Lei nº 9.279/1996 (Lei de Propriedade Industrial)
+• Lei nº 12.737/2012 (Lei de Crimes Informáticos - Lei Carolina Dieckmann)
+• Convenção de Berna para a Proteção das Obras Literárias e Artísticas
+• Acordo TRIPS (Trade-Related Aspects of Intellectual Property Rights)
+
+
+PROIBIÇÕES EXPRESSAS
+--------------------
+
+É ESTRITAMENTE PROIBIDO, sem autorização prévia e expressa por escrito do autor:
+
+✖ COPIAR, reproduzir ou duplicar o código-fonte ou qualquer parte do software
+✖ MODIFICAR, alterar, adaptar ou criar obras derivadas
+✖ DISTRIBUIR, divulgar, publicar ou compartilhar o software ou código-fonte
+✖ VENDER, comercializar, licenciar ou explorar economicamente
+✖ SUBLICENCIAR ou transferir direitos de uso a terceiros
+✖ REALIZAR ENGENHARIA REVERSA, descompilação ou desmontagem
+✖ REMOVER OU ALTERAR avisos de copyright, marcas ou créditos de autoria
+✖ PUBLICAR EM REPOSITÓRIOS PÚBLICOS (GitHub, GitLab, Bitbucket, etc.)
+✖ UTILIZAR PARA FINS COMERCIAIS sem licença específica
+✖ EXTRAIR DADOS através de scraping, crawling ou automação
+
+
+VIOLAÇÕES E PENALIDADES
+------------------------
+
+Qualquer violação dos direitos autorais deste software sujeita o infrator às 
+seguintes penalidades conforme legislação brasileira:
+
+SANÇÕES CIVIS (Lei nº 9.610/1998):
+   • Apreensão de cópias ilícitas (Art. 102)
+   • Indenização por danos materiais e morais (Art. 103)
+   • Perdas e danos correspondentes ao prejuízo causado
+   • Lucros cessantes decorrentes da violação
+
+SANÇÕES CRIMINAIS (Código Penal, Art. 184):
+   • Violação de direito autoral: detenção de 3 meses a 1 ano, ou multa
+   • Violação com intuito de lucro: reclusão de 2 a 4 anos e multa
+   • Crime praticado mediante violação de direito autoral de software: 
+     mesmas penalidades acrescidas de um terço
+
+CRIMES INFORMÁTICOS (Lei nº 12.737/2012):
+   • Invasão de dispositivo informático: reclusão de 3 meses a 1 ano e multa
+   • Interrupção de serviço telemático: detenção de 1 a 3 anos e multa
+
+
+USO AUTORIZADO
+--------------
+
+O uso deste software é permitido EXCLUSIVAMENTE para:
+
+✓ Fins educacionais e estudo pessoal
+✓ Acesso através de navegador web padrão
+✓ Utilização das funcionalidades disponibilizadas na plataforma
+✓ Armazenamento local de dados de progresso pessoal
+
+Qualquer uso comercial, corporativo ou institucional requer licença específica.
+
+
+LICENCIAMENTO COMERCIAL
+-----------------------
+
+Para solicitar licenças comerciais, corporativas, educacionais institucionais 
+ou permissões especiais, entre em contato:
+
+E-mail: carlospiquet.projetos@gmail.com
+
+
+DENÚNCIAS DE USO INDEVIDO
+--------------------------
+
+Caso tenha conhecimento de uso não autorizado, cópia ilegal, distribuição 
+indevida ou violação de direitos autorais deste software, comunique 
+imediatamente ao autor através do e-mail oficial.
+
+
+ISENÇÃO DE GARANTIAS
+--------------------
+
+Este software é fornecido "NO ESTADO EM QUE SE ENCONTRA" (AS IS), sem 
+garantias de qualquer natureza, expressas ou implícitas. O autor não se 
+responsabiliza por danos diretos, indiretos, incidentais, especiais ou 
+consequenciais decorrentes do uso ou impossibilidade de uso do software.
+
+
+RECONHECIMENTO DE AUTORIA
+--------------------------
+
+Ao utilizar este software, você reconhece e concorda que:
+
+1. Carlos Antonio de Oliveira Piquet é o autor e titular exclusivo de todos 
+   os direitos de propriedade intelectual sobre o software;
+
+2. Esta obra é fruto de trabalho intelectual original e autoral, desenvolvida 
+   com dedicação, conhecimento técnico especializado e investimento de tempo 
+   e recursos;
+
+3. A utilização do software não confere qualquer direito de propriedade, 
+   titularidade ou direitos autorais sobre o software ou seus componentes;
+
+4. Você se compromete a respeitar os direitos do autor e a não realizar 
+   qualquer conduta que viole a propriedade intelectual do software;
+
+5. Em caso de dúvidas sobre a licença de uso, você se compromete a consultar 
+   o autor antes de realizar qualquer ação que possa constituir violação.
+
+
+PRESERVAÇÃO DE DIREITOS
+------------------------
+
+Todos os direitos não expressamente concedidos ao usuário são reservados ao 
+autor. A ausência de medidas técnicas de proteção não autoriza cópia, 
+modificação ou distribuição não autorizada.
+
+Os direitos morais de autor (paternidade, integridade, nominação) são 
+inalienáveis e irrenunciáveis, conforme art. 27 da Lei nº 9.610/1998.
+
+
+VIGÊNCIA
+--------
+
+Este aviso de autoria e copyright possui vigência perpétua e permanece válido 
+independentemente da forma de distribuição ou acesso ao software.
+
+
+ACORDO DE LICENÇA COMPLETO
+---------------------------
+
+Para termos completos de uso, consulte:
+• Termos de Uso (termos_de_uso.md)
+• Licença Proprietária (licenca_proprietaria.md)
+
+
+================================================================================
+
+DATA DE EMISSÃO: 05 de novembro de 2025
+VERSÃO: 1.0
+STATUS: VIGENTE
+
+© 2025 Carlos Antonio de Oliveira Piquet
+Aluno de Redes de Computadores | Estudante de MBA em Inteligência Artificial
+E-mail: carlospiquet.projetos@gmail.com
+
+TODOS OS DIREITOS RESERVADOS | ALL RIGHTS RESERVED
+
+================================================================================
+
+NOTA LEGAL: Este documento tem caráter informativo e não substitui assessoria 
+jurídica profissional. Para adequação às suas necessidades específicas, 
+consulte um advogado especializado em propriedade intelectual.
+
+================================================================================

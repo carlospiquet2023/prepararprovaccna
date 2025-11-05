@@ -1,0 +1,4860 @@
+/* ========================================
+   RESET E VARIÁVEIS
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Cores Principais */
+    --primary-color: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #3b82f6;
+    
+    /* Cores de Fundo */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+    
+    /* Cores de Texto */
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+    
+    /* Cores de Borda */
+    --border-color: #e2e8f0;
+    --border-dark: #cbd5e1;
+    
+    /* Cores de Status */
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --info-color: #06b6d4;
+    
+    /* Sombras */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Tamanhos */
+    --header-height: 70px;
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 80px;
+    
+    /* Transições */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+}
+
+/* Tema Escuro */
+body.dark-theme {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-light: #94a3b8;
+    --border-color: #334155;
+    --border-dark: #475569;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    z-index: 1000;
+}
+
+.header-content {
+    height: 100%;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    font-size: 2rem;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-name {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.btn-config {
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: var(--transition-fast);
+}
+
+.btn-config:hover {
+    background-color: var(--bg-tertiary);
+}
+
+/* ========================================
+   LAYOUT PRINCIPAL
+   ======================================== */
+.main-layout {
+    display: flex;
+    margin-top: var(--header-height);
+    min-height: calc(100vh - var(--header-height));
+}
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--header-height);
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--header-height));
+    background-color: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-normal);
+    overflow-y: auto;
+    z-index: 900;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+}
+
+.sidebar.collapsed .menu-text {
+    display: none;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1.5rem 0;
+}
+
+.menu-list {
+    list-style: none;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.menu-item:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.menu-item.active {
+    background-color: var(--primary-light);
+    color: white;
+    border-right: 4px solid var(--primary-dark);
+}
+
+.menu-icon {
+    font-size: 1.5rem;
+    min-width: 1.5rem;
+    text-align: center;
+}
+
+.menu-text {
+    white-space: nowrap;
+    transition: var(--transition-normal);
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-toggle-sidebar {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--bg-tertiary);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: 1.25rem;
+}
+
+.btn-toggle-sidebar:hover {
+    background-color: var(--border-color);
+}
+
+.sidebar.collapsed .btn-toggle-sidebar span {
+    transform: rotate(180deg);
+    display: inline-block;
+}
+
+/* ========================================
+   ÁREA DE CONTEÚDO
+   ======================================== */
+.content-area {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: 2rem;
+    min-height: calc(100vh - var(--header-height));
+    transition: var(--transition-normal);
+}
+
+.sidebar.collapsed ~ .content-area {
+    margin-left: var(--sidebar-collapsed);
+}
+
+/* Loading */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   MODAL
+   ======================================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--bg-primary);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-lg);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: var(--transition-fast);
+}
+
+.btn-close-modal:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.config-section {
+    margin-bottom: 1.5rem;
+}
+
+.config-section h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+/* ========================================
+   FORMULÁRIOS E BOTÕES
+   ======================================== */
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: var(--transition-fast);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-dark);
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+@media (max-width: 768px) {
+    .header-content {
+        padding: 0 1rem;
+    }
+    
+    .logo h1 {
+        font-size: 1.25rem;
+    }
+    
+    .user-name {
+        display: none;
+    }
+    
+    .sidebar {
+        width: var(--sidebar-collapsed);
+    }
+    
+    .sidebar .menu-text {
+        display: none;
+    }
+    
+    .content-area {
+        margin-left: var(--sidebar-collapsed);
+        padding: 1rem;
+    }
+    
+    .btn-toggle-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    
+    .content-area {
+        margin-left: 0;
+    }
+}
+
+/* ========================================
+   DASHBOARD (ETAPA 2)
+   ======================================== */
+
+/* Grid Principal do Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cards */
+.card {
+    background-color: var(--bg-primary);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.card-primary {
+    grid-row: span 2;
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Cards de Estatísticas */
+.card-stats {
+    padding: 1.5rem;
+}
+
+.card-icon {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.card-stats h4 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.card-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.card-success .card-stats h4,
+.card-success .stat-number {
+    color: white;
+}
+
+.card-info {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+}
+
+.card-info .card-stats h4,
+.card-info .stat-number {
+    color: white;
+}
+
+.card-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.card-warning .card-stats h4,
+.card-warning .stat-number {
+    color: white;
+}
+
+.card-accent {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+}
+
+.card-accent .card-stats h4,
+.card-accent .stat-number {
+    color: white;
+}
+
+/* Círculo de Progresso */
+.progress-circle-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+}
+
+.progress-circle {
+    transform: rotate(-90deg);
+}
+
+.progress-circle-bg {
+    fill: none;
+    stroke: var(--bg-tertiary);
+    stroke-width: 12;
+}
+
+.progress-circle-fill {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 12;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.5s ease;
+}
+
+.progress-circle-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.progress-percentage {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.progress-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Seções */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modules-progress-section,
+.recent-activity-section,
+.recommendations-section {
+    margin-top: 2rem;
+}
+
+/* Grid de Módulos */
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.module-card {
+    background-color: var(--bg-primary);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--border-color);
+    transition: var(--transition-normal);
+}
+
+.module-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.module-card.module-complete {
+    border-left-color: var(--success-color);
+}
+
+.module-card.module-in-progress {
+    border-left-color: var(--warning-color);
+}
+
+.module-card.module-not-started {
+    border-left-color: var(--border-color);
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.module-status-icon {
+    font-size: 1.5rem;
+}
+
+.module-number {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.module-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+/* Barra de Progresso */
+.progress-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--bg-tertiary);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    border-radius: 1rem;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 40px;
+}
+
+/* Lista de Atividades */
+.activity-list {
+    background-color: var(--bg-primary);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.activity-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.activity-content p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+/* Estado Vazio */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+}
+
+.empty-state p:first-child {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.text-muted {
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+/* Recomendações */
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.recommendation-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: var(--bg-primary);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    border: 2px solid transparent;
+}
+
+.recommendation-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: var(--primary-color);
+}
+
+.recommendation-card.rec-primary {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+}
+
+.recommendation-card.rec-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+}
+
+.recommendation-card.rec-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
+}
+
+.recommendation-card.rec-info {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.05) 100%);
+}
+
+.rec-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.75rem;
+    flex-shrink: 0;
+}
+
+.rec-content {
+    flex: 1;
+}
+
+.rec-content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.rec-content p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.rec-arrow {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    transition: var(--transition-fast);
+}
+
+.recommendation-card:hover .rec-arrow {
+    transform: translateX(5px);
+    color: var(--primary-color);
+}
+
+/* ========================================
+   UTILITÁRIOS
+   ======================================== */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+
+/* ========================================
+   MÓDULOS TEÓRICOS (ETAPA 3)
+   ======================================== */
+.modulos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modulo-item {
+    background-color: var(--bg-primary);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    border: 2px solid var(--border-color);
+}
+
+.modulo-item:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateX(5px);
+    border-color: var(--primary-color);
+}
+
+.modulo-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modulo-icon {
+    font-size: 2rem;
+}
+
+.modulo-texto h3 {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.modulo-texto p {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modulo-status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.modulo-item.completo .modulo-status-badge {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.modulo-item.em-andamento .modulo-status-badge {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.btn-voltar {
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-tertiary);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: var(--transition-fast);
+}
+
+.btn-voltar:hover {
+    background-color: var(--border-dark);
+}
+
+.modulo-header-completo {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.modulo-titulo {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.modulo-descricao {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+}
+
+.modulo-conteudo {
+    margin-bottom: 2rem;
+}
+
+.topico-section {
+    background-color: var(--bg-secondary);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.topico-titulo {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.topico-conteudo h3 {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin: 1.5rem 0 1rem 0;
+}
+
+.topico-conteudo h4 {
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    margin: 1rem 0 0.75rem 0;
+}
+
+.topico-conteudo p {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.topico-conteudo ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.topico-conteudo li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.camadas-osi {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.camada {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid;
+}
+
+.camada strong {
+    display: block;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+}
+
+.camada p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.camada-7 { background: rgba(220, 38, 38, 0.1); border-color: #dc2626; }
+.camada-6 { background: rgba(234, 88, 12, 0.1); border-color: #ea580c; }
+.camada-5 { background: rgba(245, 158, 11, 0.1); border-color: #f59e0b; }
+.camada-4 { background: rgba(16, 185, 129, 0.1); border-color: #10b981; }
+.camada-3 { background: rgba(6, 182, 212, 0.1); border-color: #06b6d4; }
+.camada-2 { background: rgba(37, 99, 235, 0.1); border-color: #2563eb; }
+.camada-1 { background: rgba(139, 92, 246, 0.1); border-color: #8b5cf6; }
+
+.dica-box, .importante-box, .alerta-box {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid;
+}
+
+.dica-box {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--info-color);
+}
+
+.importante-box {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-color);
+}
+
+.alerta-box {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--error-color);
+}
+
+.tabela-comparacao, .tabela-icmp {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-comparacao th, .tabela-icmp th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.tabela-comparacao td, .tabela-icmp td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.lista-verde li, .lista-azul li {
+    margin-bottom: 0.5rem;
+}
+
+.comparacao-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.comparacao-item {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.comando-box {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.comando-box code {
+    display: block;
+    background-color: var(--bg-primary);
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+}
+
+.processo-box {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.processo-box ol {
+    margin: 0.5rem 0 0 1.5rem;
+}
+
+.exemplo-tracert pre {
+    background-color: var(--bg-primary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+}
+
+.modulo-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: 2rem 0;
+    border-top: 2px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .comparacao-box {
+        grid-template-columns: 1fr;
+    }
+    
+    .modulo-footer {
+        flex-direction: column;
+    }
+}
+
+/* Módulo 2 - IPv4 */
+.exemplo-ip {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.ip-visual {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.octeto {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+.tabela-classes, .tabela-cidr, .tabela-subnets, .tabela-wildcard {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-classes th, .tabela-cidr th, .tabela-subnets th, .tabela-wildcard th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.tabela-classes td, .tabela-cidr td, .tabela-subnets td, .tabela-wildcard td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.875rem;
+}
+
+.tabela-classes td strong {
+    font-size: 1.125rem;
+    color: var(--primary-color);
+}
+
+.cidr-explicacao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.cidr-explicacao ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.exemplo-subnetting {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.exemplo-vlsm {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.exemplo-vlsm h5 {
+    color: var(--primary-color);
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.formulas-box {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.formula-item {
+    background-color: var(--bg-primary);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.formula-item code {
+    background-color: var(--bg-tertiary);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+    display: inline-block;
+    margin: 0.5rem 0;
+}
+
+.exercicio-box {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid var(--warning-color);
+}
+
+.mascaras-detalhadas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.mascara-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-top: 4px solid var(--primary-color);
+}
+
+.mascara-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+}
+
+.mascara-card p {
+    margin: 0.5rem 0;
+    font-size: 0.875rem;
+}
+
+.wildcard-explicacao {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+    .ip-visual {
+        flex-wrap: wrap;
+    }
+    
+    .octeto {
+        padding: 0.75rem 1rem;
+        font-size: 1.25rem;
+    }
+    
+    .mascaras-detalhadas {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Módulo 3 - IPv6 */
+.comparacao-ipv4-ipv6 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.ip-version {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.ip-version h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.ipv6-estrutura {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.ipv6-exemplo {
+    background-color: var(--bg-primary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.ipv6-exemplo code {
+    font-size: 1.125rem;
+    font-family: 'Courier New', monospace;
+    color: var(--primary-color);
+}
+
+.regras-box {
+    margin: 1.5rem 0;
+}
+
+.regra-item {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--info-color);
+}
+
+.regra-item strong {
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.alerta-text {
+    color: var(--error-color);
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.tabela-abreviacao {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-abreviacao th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-abreviacao td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+.tipos-ipv6 {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.tipo-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid;
+}
+
+.tipo-unicast { border-color: #10b981; }
+.tipo-multicast { border-color: #f59e0b; }
+.tipo-anycast { border-color: #8b5cf6; }
+
+.tipo-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.tipo-card h5 {
+    margin: 1rem 0 0.5rem 0;
+    color: var(--text-primary);
+}
+
+.tabela-multicast {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.tabela-multicast td {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tabela-multicast td:first-child {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.slaac-exemplo {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.metodos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.metodo-item {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.metodo-item h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.dhcpv6-modos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.modo-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-top: 4px solid var(--primary-color);
+}
+
+.modo-card h5 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.tabela-flags, .tabela-ndp {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-flags th, .tabela-ndp th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-flags td, .tabela-ndp td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.comandos-secao {
+    margin: 2rem 0;
+}
+
+.comandos-secao h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.exemplo-output {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.exemplo-output pre {
+    background-color: var(--bg-primary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .comparacao-ipv4-ipv6,
+    .metodos-grid,
+    .dhcpv6-modos {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Módulo 4 - VLAN/Trunk/MAC */
+.mac-estrutura {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.mac-exemplo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.mac-parte {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.mac-parte code {
+    font-size: 1.5rem;
+    font-family: 'Courier New', monospace;
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.separador {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.texto-centro {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.tabela-mac, .tabela-cam {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-mac th, .tabela-cam th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-mac td, .tabela-cam td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.exemplo-cam {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.vantagens-vlan {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.tipos-vlan {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.vlan-tipo {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-top: 4px solid var(--primary-color);
+}
+
+.vlan-tipo h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.config-passo {
+    margin: 2rem 0;
+}
+
+.config-passo h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.trunk-explicacao {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.protocolos-trunk {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.protocolo-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.protocolo-card h5 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.frame-802-1q {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.frame-visual {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+.frame-campo {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 0.25rem;
+    text-align: center;
+    flex: 1;
+    font-size: 0.875rem;
+}
+
+.tag-campo {
+    background-color: var(--warning-color);
+    color: white;
+    font-weight: 600;
+}
+
+.config-trunk {
+    margin: 2rem 0;
+}
+
+.config-trunk h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.tabela-dtp, .tabela-matriz {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-dtp th, .tabela-matriz th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-dtp td, .tabela-matriz td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.matriz-dtp {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.resultado-access {
+    background-color: rgba(59, 130, 246, 0.2);
+    font-weight: 600;
+}
+
+.resultado-trunk {
+    background-color: rgba(16, 185, 129, 0.2);
+    font-weight: 600;
+}
+
+.resultado-erro {
+    background-color: rgba(239, 68, 68, 0.2);
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .mac-exemplo {
+        flex-direction: column;
+    }
+    
+    .protocolos-trunk,
+    .tipos-vlan {
+        grid-template-columns: 1fr;
+    }
+    
+    .frame-visual {
+        flex-wrap: wrap;
+    }
+}
+
+/* Módulo 5 - STP */
+.problemas-loop {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.problema-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--error-color);
+}
+
+.problema-card h5 {
+    color: var(--error-color);
+    margin-bottom: 0.75rem;
+}
+
+.bridge-id {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.bid-parte {
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--bg-primary);
+    border-radius: 0.5rem;
+}
+
+.bid-parte strong {
+    display: block;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.tabela-estados, .tabela-custo {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.875rem;
+}
+
+.tabela-estados th, .tabela-custo th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-estados td, .tabela-custo td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.timeline-stp {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.timeline-item {
+    background-color: var(--bg-primary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin: 1rem 0;
+    font-family: 'Courier New', monospace;
+}
+
+.tipos-portas-stp {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.porta-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid;
+}
+
+.porta-root {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-color);
+}
+
+.porta-designated {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--info-color);
+}
+
+.porta-blocked {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: var(--error-color);
+}
+
+.porta-card h4 {
+    margin-bottom: 1rem;
+}
+
+.versoes-stp {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.versao-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-top: 4px solid var(--border-color);
+}
+
+.versao-recomendada {
+    border-top-color: var(--success-color);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, var(--bg-tertiary) 100%);
+}
+
+.versao-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.config-stp, .config-portfast, .config-bpduguard {
+    margin: 2rem 0;
+}
+
+.config-stp h4, .config-portfast h4, .config-bpduguard h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.bpduguard-acao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--warning-color);
+}
+
+.bpduguard-acao ol {
+    margin: 1rem 0 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .problemas-loop,
+    .tipos-portas-stp,
+    .versoes-stp {
+        grid-template-columns: 1fr;
+    }
+    
+    .bridge-id {
+        flex-direction: column;
+    }
+}
+
+/* Módulo 6 - EtherChannel */
+.vantagens-etherchannel {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.exemplo-etherchannel {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.etherchannel-visual {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.ec-lado {
+    text-align: center;
+}
+
+.ec-lado strong {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-size: 1.125rem;
+}
+
+.ec-portas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ec-porta {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+}
+
+.ec-agregado {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: var(--success-color);
+    color: white;
+    border-radius: 0.5rem;
+}
+
+.ec-agregado strong {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.protocolos-etherchannel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.protocolo-ec {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-top: 4px solid;
+}
+
+.lacp-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, var(--bg-tertiary) 100%);
+    border-color: var(--success-color);
+}
+
+.pagp-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--bg-tertiary) 100%);
+    border-color: var(--warning-color);
+}
+
+.on-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, var(--bg-tertiary) 100%);
+    border-color: var(--error-color);
+}
+
+.protocolo-ec h4 {
+    margin-bottom: 1rem;
+}
+
+.tabela-modos-lacp, .tabela-modos-pagp, .tabela-compatibilidade, .tabela-load-balance {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-modos-lacp th, .tabela-modos-pagp th, .tabela-compatibilidade th, .tabela-load-balance th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-modos-lacp td, .tabela-modos-pagp td, .tabela-compatibilidade td, .tabela-load-balance td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.compat-sim {
+    background-color: rgba(16, 185, 129, 0.2);
+    font-weight: 600;
+    color: var(--success-color);
+}
+
+.compat-nao {
+    background-color: rgba(239, 68, 68, 0.2);
+    font-weight: 600;
+    color: var(--error-color);
+}
+
+.config-ec, .config-pagp, .config-on, .config-load-balance {
+    margin: 2rem 0;
+}
+
+.config-ec h5 {
+    color: var(--primary-color);
+    margin: 1.5rem 0 1rem 0;
+}
+
+.comandos-verificacao {
+    margin: 1.5rem 0;
+}
+
+.troubleshooting-lista {
+    margin: 1.5rem 0;
+}
+
+.problema-ts {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid var(--warning-color);
+}
+
+.problema-ts h5 {
+    color: var(--error-color);
+    margin-bottom: 0.75rem;
+}
+
+.problema-ts ul {
+    margin: 0.5rem 0 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .etherchannel-visual {
+        flex-direction: column;
+    }
+    
+    .protocolos-etherchannel {
+        grid-template-columns: 1fr;
+    }
+    
+    .tabela-compatibilidade {
+        font-size: 0.75rem;
+    }
+}
+
+/* Módulo 7 - Roteamento */
+.conceitos-roteamento {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.conceito-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-top: 4px solid var(--primary-color);
+}
+
+.conceito-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.tabela-tipos-rotas, .tabela-custo-ospf {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-tipos-rotas th, .tabela-custo-ospf th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-tipos-rotas td, .tabela-custo-ospf td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.ad-explicacao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.ad-escala {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.ad-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.ad-melhor { background-color: rgba(16, 185, 129, 0.3); }
+.ad-bom { background-color: rgba(59, 130, 246, 0.3); }
+.ad-medio { background-color: rgba(245, 158, 11, 0.3); }
+.ad-ruim { background-color: rgba(239, 68, 68, 0.3); }
+
+.vantagens-estatica {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.vd-box {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.vd-box h5 {
+    margin-bottom: 1rem;
+}
+
+.config-estatica, .config-default, .config-ospf, .config-dr {
+    margin: 2rem 0;
+}
+
+.config-estatica h5 {
+    color: var(--primary-color);
+    margin: 1.5rem 0 1rem 0;
+}
+
+.default-route-explicacao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.caracteristicas-ospf {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.conceitos-ospf {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.conceito-ospf-card {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.conceito-ospf-card h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.custo-ospf {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.rid-selecao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.rid-selecao ol {
+    margin: 1rem 0 0 1.5rem;
+}
+
+.dr-explicacao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.papeis-ospf {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.papel-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid;
+}
+
+.papel-dr {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-color);
+}
+
+.papel-bdr {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--info-color);
+}
+
+.papel-drother {
+    background-color: rgba(148, 163, 184, 0.1);
+    border-color: var(--text-secondary);
+}
+
+.papel-card h5 {
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .conceitos-roteamento,
+    .vantagens-estatica,
+    .conceitos-ospf,
+    .papeis-ospf {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Módulo 8 - DHCP, DNS, NTP */
+.dhcp-beneficios {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.dora-processo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.dora-step {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    border-top: 3px solid var(--primary-color);
+}
+
+.dora-numero {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 auto 1rem auto;
+}
+
+.dora-step h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.conceitos-dhcp {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.conceito-dhcp-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.conceito-dhcp-card h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.config-dhcp, .config-relay, .config-dns, .config-ntp {
+    margin: 2rem 0;
+}
+
+.exemplo-completo {
+    margin: 2rem 0;
+}
+
+.relay-explicacao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.cenario-relay {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.topologia-box {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.topologia-box pre {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.dns-funcionamento {
+    margin: 1.5rem 0;
+}
+
+.tabela-dns, .tabela-resumo {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-dns th, .tabela-resumo th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-dns td, .tabela-resumo td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+}
+
+.dns-cache {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.ntp-importancia {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.stratum-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stratum-item {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    border-left: 5px solid;
+}
+
+.stratum-0 {
+    background-color: rgba(16, 185, 129, 0.2);
+    border-color: var(--success-color);
+}
+
+.stratum-1 {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: var(--info-color);
+}
+
+.stratum-2 {
+    background-color: rgba(245, 158, 11, 0.2);
+    border-color: var(--warning-color);
+}
+
+.stratum-3 {
+    background-color: rgba(148, 163, 184, 0.2);
+    border-color: var(--text-secondary);
+}
+
+.problemas-dhcp {
+    margin: 2rem 0;
+}
+
+.solucao-box {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.debug-dhcp {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.praticas-dhcp, .praticas-dns, .praticas-ntp {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.resumo-servicos {
+    margin: 2rem 0;
+}
+
+.checklist-box {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.checklist-box ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.checklist-box li {
+    padding: 0.5rem 0;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .dora-processo,
+    .conceitos-dhcp {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Módulo 12 - Automação e SDN */
+.tradicional-vs-automacao {
+    margin: 2rem 0;
+}
+
+.comparacao-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.metodo-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 5px solid;
+}
+
+.tradicional {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger-color);
+}
+
+.automacao {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-color);
+}
+
+.beneficios-automacao {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.beneficio-item {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-top: 3px solid var(--primary-color);
+}
+
+.casos-uso {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.api-explicacao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.tipos-api {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.api-tipo-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.exemplo-api {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    font-weight: 600;
+}
+
+.rest-metodos {
+    margin: 2rem 0;
+}
+
+.tabela-rest, .tabela-json, .tabela-comparacao-json, .tabela-bibliotecas, .tabela-nfv, .tabela-cloud {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-rest th, .tabela-json th, .tabela-comparacao-json th, .tabela-bibliotecas th, .tabela-nfv th, .tabela-cloud th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-rest td, .tabela-json td, .tabela-comparacao-json td, .tabela-bibliotecas td, .tabela-nfv td, .tabela-cloud td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.exemplo-rest {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.json-explicacao, .json-tipos, .json-exemplos {
+    margin: 2rem 0;
+}
+
+.json-vs-xml {
+    margin: 2rem 0;
+}
+
+.tradicional-vs-sdn {
+    margin: 2rem 0;
+}
+
+.comparacao-planos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.rede-tradicional, .rede-sdn {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.diagrama-tradicional, .diagrama-sdn {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.arquitetura-sdn {
+    margin: 2rem 0;
+}
+
+.camada-sdn {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid var(--primary-color);
+}
+
+.apis-sdn {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.api-sdn-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.beneficios-sdn, .casos-uso-sdn {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.ferramentas-automacao {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.ferramenta-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.caracteristicas-ferramenta {
+    margin: 1rem 0;
+}
+
+.bibliotecas-python {
+    margin: 2rem 0;
+}
+
+.virtualizacao-tipos {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.virtual-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--info-color);
+}
+
+.nfv-exemplos, .beneficios-nfv, .cloud-conceitos, .sdwan-caracteristicas, .sdwan-beneficios {
+    margin: 1.5rem 0;
+}
+
+.conceito-cloud {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.modelos-cloud {
+    margin: 2rem 0;
+}
+
+.tendencias-redes {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.tendencia-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--success-color);
+}
+
+.ai-usos, .ibn-fluxo, .zerotrust-principios, .wifi7-novidades, .edge-beneficios, .ipv6-motivos {
+    margin: 1rem 0;
+}
+
+.exemplo-ai, .exemplo-ibn {
+    background-color: rgba(59, 130, 246, 0.1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 3px solid var(--info-color);
+}
+
+.habilidades-futuro {
+    margin: 2rem 0;
+}
+
+.habilidade-categoria {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.mensagem-final {
+    margin: 3rem 0;
+}
+
+.card-final {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+    padding: 2rem;
+    border-radius: 1rem;
+    border-left: 5px solid var(--success-color);
+    text-align: center;
+}
+
+.citacao-final {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .comparacao-grid,
+    .beneficios-automacao,
+    .comparacao-planos,
+    .apis-sdn {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Módulo 11 - Wi-Fi */
+.wifi-basico {
+    margin: 2rem 0;
+}
+
+.componentes-wifi {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.componente-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    border-top: 3px solid var(--primary-color);
+}
+
+.componente-card h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.tabela-wifi-standards, .tabela-uso-freq, .tabela-seguranca-wifi, .tabela-ferramentas, .tabela-resumo-wifi {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-wifi-standards th, .tabela-uso-freq th, .tabela-seguranca-wifi th, .tabela-ferramentas th, .tabela-resumo-wifi th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-wifi-standards td, .tabela-uso-freq td, .tabela-seguranca-wifi td, .tabela-ferramentas td, .tabela-resumo-wifi td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.comparacao-freq {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.freq-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 5px solid;
+}
+
+.freq-24 {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--info-color);
+}
+
+.freq-5 {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-color);
+}
+
+.caracteristicas {
+    margin: 1.5rem 0;
+}
+
+.lista-vermelha {
+    color: var(--danger-color);
+}
+
+.canais-24, .canais-5 {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.canais-recomendados, .canais-exemplos {
+    background-color: var(--bg-tertiary);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin: 0.5rem 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.dual-band {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.config-dual {
+    margin: 1rem 0;
+}
+
+.recomendacoes-freq {
+    margin: 2rem 0;
+}
+
+.texto-azul {
+    color: var(--info-color);
+    font-weight: 600;
+}
+
+.evolucao-seguranca {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.protocolo-seg {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 5px solid;
+}
+
+.wep {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger-color);
+}
+
+.wpa {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: var(--warning-color);
+}
+
+.wpa2 {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-color);
+}
+
+.wpa3 {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--info-color);
+}
+
+.detalhes-protocolo {
+    margin: 1rem 0;
+}
+
+.problemas-wep, .melhorias-wpa, .caracteristicas-wpa2, .melhorias-wpa3 {
+    margin: 1rem 0;
+}
+
+.texto-laranja {
+    color: var(--warning-color);
+    font-weight: 600;
+}
+
+.comparacao-seguranca {
+    margin: 2rem 0;
+}
+
+.modos-wifi {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.modo-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.topologia-modo {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.caracteristicas-modo {
+    margin: 1rem 0;
+}
+
+.uso-modo {
+    background-color: rgba(59, 130, 246, 0.1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 3px solid var(--info-color);
+}
+
+.conceitos-extras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.conceito-wifi-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-top: 3px solid var(--primary-color);
+}
+
+.config-wifi-basica {
+    margin: 2rem 0;
+}
+
+.passo-config {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.config-avancada {
+    margin: 2rem 0;
+}
+
+.recurso-avancado {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.comandos-cli-ap {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.problemas-wifi {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.problema-wifi-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--warning-color);
+}
+
+.causas-solucoes {
+    margin: 1rem 0;
+}
+
+.ferramentas-wifi {
+    margin: 2rem 0;
+}
+
+.praticas-seguranca-wifi, .praticas-performance, .praticas-gestao, .praticas-design {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.checklist-wifi {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.checklist-wifi ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.checklist-wifi li {
+    padding: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.resumo-wifi {
+    margin: 2rem 0;
+}
+
+@media (max-width: 768px) {
+    .componentes-wifi,
+    .comparacao-freq,
+    .conceitos-extras {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Módulo 10 - Segurança */
+.ssh-vs-telnet {
+    margin: 2rem 0;
+}
+
+.tabela-comparacao-ssh, .tabela-wildcard, .tabela-portas, .tabela-violation {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-comparacao-ssh th, .tabela-wildcard th, .tabela-portas th, .tabela-violation th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-comparacao-ssh td, .tabela-wildcard td, .tabela-portas td, .tabela-violation td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.texto-vermelho {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+.texto-verde {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.ssh-config, .config-standard-acl, .config-extended-acl, .config-named-acl, .config-portsec {
+    margin: 2rem 0;
+}
+
+.exemplo-completo-ssh, .exemplo-completo-std, .exemplo-completo-ps {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.acl-funcao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.tipos-acl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.tipo-acl-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.exemplo-acl {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.direcao-acl {
+    margin: 2rem 0;
+}
+
+.diagrama-acl {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.wildcard-acl {
+    margin: 2rem 0;
+}
+
+.exemplos-standard, .exemplos-extended {
+    margin: 2rem 0;
+}
+
+.aplicar-acl, .aplicar-named, .aplicar-extended {
+    margin: 2rem 0;
+}
+
+.portas-comuns {
+    margin: 2rem 0;
+}
+
+.vantagens-named {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.editar-acl {
+    margin: 2rem 0;
+}
+
+.portsec-funcao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.violation-modes {
+    margin: 2rem 0;
+}
+
+.mac-learning {
+    margin: 2rem 0;
+}
+
+.recovery-portsec {
+    margin: 2rem 0;
+}
+
+.praticas-ssh, .praticas-acl, .praticas-portsec, .praticas-gerais {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.checklist-seguranca {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.checklist-seguranca ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.checklist-seguranca li {
+    padding: 0.5rem 0;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .tipos-acl {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Módulo 9 - NAT/PAT */
+.nat-problema {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.topologia-nat, .topologia-box {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.topologia-nat pre, .topologia-box pre {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.fluxo-nat {
+    margin: 2rem 0;
+}
+
+.ips-privados {
+    margin: 2rem 0;
+}
+
+.tabela-ips, .tabela-comparacao, .tabela-pat {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.tabela-ips th, .tabela-comparacao th, .tabela-pat th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+}
+
+.tabela-ips td, .tabela-comparacao td, .tabela-pat td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.tipos-nat {
+    display: grid;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.tipo-nat-card {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.destaque-pat {
+    border-left: 4px solid var(--success-color);
+    background-color: rgba(16, 185, 129, 0.05);
+}
+
+.exemplo-nat {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.uso-box {
+    background-color: rgba(59, 130, 246, 0.1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--info-color);
+    margin: 1rem 0;
+}
+
+.vd-box {
+    margin: 1rem 0;
+}
+
+.destaque-row {
+    background-color: rgba(16, 185, 129, 0.1);
+    font-weight: 600;
+}
+
+.comparacao-nat {
+    margin: 2rem 0;
+}
+
+.config-static-nat, .config-dynamic-nat, .config-pat {
+    margin: 2rem 0;
+}
+
+.exemplo-cenario {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.pat-funcionamento {
+    margin: 2rem 0;
+}
+
+.troubleshooting-nat {
+    margin: 2rem 0;
+}
+
+.problema-box {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--warning-color);
+}
+
+.debug-nat {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.portforward-explicacao {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.config-portforward {
+    margin: 2rem 0;
+}
+
+.exemplos-portforward {
+    margin: 2rem 0;
+}
+
+.config-completa-pf {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+/* ========================================
+   SISTEMA DE QUIZ - ETAPA 4
+   ======================================== */
+
+.quiz-intro-card {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.quiz-features {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.quiz-features li {
+    padding: 0.5rem 0;
+    font-size: 1.05rem;
+}
+
+.quiz-modulos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.quiz-modulo-card {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.quiz-modulo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.modulo-icon {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.modulo-stats {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+}
+
+.stat-value.aprovado {
+    color: var(--success-color);
+    font-weight: 700;
+}
+
+.stat-value.reprovado {
+    color: var(--danger-color);
+    font-weight: 700;
+}
+
+/* Quiz Container */
+.quiz-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.quiz-header {
+    margin-bottom: 2rem;
+}
+
+.quiz-progress-bar {
+    height: 8px;
+    background-color: var(--bg-tertiary);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+    transition: width 0.3s;
+}
+
+.quiz-progress-text {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.quiz-question-card {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.quiz-question {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+}
+
+.quiz-alternatives {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quiz-alternative {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    width: 100%;
+}
+
+.quiz-alternative:hover:not(:disabled) {
+    border-color: var(--primary-color);
+    transform: translateX(4px);
+}
+
+.quiz-alternative:disabled {
+    cursor: not-allowed;
+}
+
+.quiz-alternative.correct {
+    background-color: rgba(72, 187, 120, 0.1);
+    border-color: var(--success-color);
+}
+
+.quiz-alternative.incorrect {
+    background-color: rgba(245, 101, 101, 0.1);
+    border-color: var(--danger-color);
+}
+
+.alternative-letter {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.alternative-text {
+    flex: 1;
+}
+
+.quiz-explanation {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    margin-top: 1.5rem;
+    border-left: 4px solid var(--info-color);
+}
+
+.quiz-explanation.hidden {
+    display: none;
+}
+
+.quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Resultado do Quiz */
+.quiz-result-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.quiz-result-card {
+    background-color: var(--bg-secondary);
+    padding: 3rem 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.quiz-result-card.aprovado {
+    border-top: 5px solid var(--success-color);
+}
+
+.quiz-result-card.reprovado {
+    border-top: 5px solid var(--danger-color);
+}
+
+.result-emoji {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.result-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 1rem 0 2rem;
+}
+
+.result-score {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.score-circle {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.score-circle-bg, .score-circle-fill {
+    fill: none;
+    stroke-width: 15;
+}
+
+.score-circle-bg {
+    stroke: var(--bg-tertiary);
+}
+
+.score-circle-fill {
+    stroke: var(--success-color);
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dasharray 1s;
+}
+
+.score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.score-number {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.score-label {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.result-details {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.detail-item.correct {
+    color: var(--success-color);
+}
+
+.detail-item.incorrect {
+    color: var(--danger-color);
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* ========================================
+   SIMULADOS - ETAPA 5
+   ======================================== */
+
+.simulado-intro {
+    margin-bottom: 2rem;
+}
+
+.intro-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.simulado-features {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.simulado-features li {
+    padding: 0.5rem 0;
+}
+
+.simulados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.simulado-card {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s;
+}
+
+.simulado-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.simulado-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-iniciante {
+    background-color: rgba(72, 187, 120, 0.2);
+    color: var(--success-color);
+}
+
+.badge-intermediário {
+    background-color: rgba(237, 137, 54, 0.2);
+    color: var(--warning-color);
+}
+
+.badge-avançado {
+    background-color: rgba(245, 101, 101, 0.2);
+    color: var(--danger-color);
+}
+
+.simulado-descricao {
+    color: var(--text-secondary);
+    margin: 1rem 0;
+    line-height: 1.6;
+}
+
+.simulado-info {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.simulado-topicos {
+    margin: 1.5rem 0;
+}
+
+.topicos-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.topic-tag {
+    background-color: var(--bg-tertiary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.simulado-resultado {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-success {
+    color: var(--success-color);
+}
+
+.text-danger {
+    color: var(--danger-color);
+}
+
+/* Simulado Container */
+.simulado-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.simulado-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.simulado-timer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.questoes-navigator {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: var(--bg-secondary);
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.questao-nav-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-primary);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.questao-nav-btn:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.questao-nav-btn.answered {
+    background-color: rgba(72, 187, 120, 0.2);
+    border-color: var(--success-color);
+}
+
+.questao-nav-btn.current {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.simulado-questao-card {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.questao-numero {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.simulado-alternatives {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.simulado-alternative {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.simulado-alternative:hover {
+    border-color: var(--primary-color);
+}
+
+.simulado-alternative.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(79, 70, 229, 0.1);
+}
+
+.check-mark {
+    position: absolute;
+    right: 1rem;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.simulado-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* ========================================
+   LABS PRÁTICOS - ETAPA 6
+   ======================================== */
+
+.labs-intro {
+    margin-bottom: 2rem;
+}
+
+.labs-features {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.labs-features li {
+    padding: 0.5rem 0;
+}
+
+.labs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.lab-card-preview {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s;
+}
+
+.lab-card-preview:hover {
+    transform: translateY(-4px);
+}
+
+.lab-card-preview.lab-concluido {
+    border-top: 3px solid var(--success-color);
+}
+
+.lab-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.lab-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.lab-badge.intermediário {
+    background-color: rgba(237, 137, 54, 0.2);
+    color: var(--warning-color);
+}
+
+.lab-badge.avançado {
+    background-color: rgba(245, 101, 101, 0.2);
+    color: var(--danger-color);
+}
+
+.lab-descricao {
+    color: var(--text-secondary);
+    margin: 1rem 0;
+}
+
+.lab-meta-info {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.lab-objetivos-preview ul {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.lab-objetivos-preview li {
+    margin: 0.5rem 0;
+    color: var(--text-secondary);
+}
+
+.lab-progresso-preview {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+}
+
+.progresso-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-small {
+    height: 8px;
+    background-color: var(--bg-primary);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+    transition: width 0.3s;
+}
+
+/* Lab Container */
+.lab-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.lab-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.lab-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.lab-badge {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.lab-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.lab-sidebar, .lab-sidebar-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.lab-card {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.topology-diagram {
+    background-color: var(--bg-tertiary);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.device {
+    padding: 1rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.device.switch {
+    background-color: #10b981;
+}
+
+.device.router {
+    background-color: #3b82f6;
+}
+
+.device.pc {
+    background-color: #6366f1;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.objetivos-list {
+    list-style: none;
+    padding: 0;
+}
+
+.objetivo-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+}
+
+.objetivo-numero {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Terminal */
+.terminal-container {
+    background-color: #1e1e1e;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.terminal-header {
+    background-color: #323232;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.terminal-title {
+    color: #e0e0e0;
+    font-weight: 600;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-icon:hover {
+    opacity: 1;
+}
+
+.terminal-output {
+    height: 400px;
+    overflow-y: auto;
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.terminal-line {
+    color: #e0e0e0;
+    margin: 0.25rem 0;
+}
+
+.terminal-command {
+    color: #4fc3f7;
+}
+
+.terminal-input-area {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: #1e1e1e;
+    border-top: 1px solid #323232;
+}
+
+.terminal-prompt {
+    color: #4caf50;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+}
+
+.terminal-input {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.comandos-rapidos {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+}
+
+.cmd-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.cmd-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.cmd-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.validacao-list {
+    margin-top: 1rem;
+}
+
+.validacao-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-radius: 0.5rem;
+}
+
+.validacao-item.valido {
+    background-color: rgba(72, 187, 120, 0.1);
+    color: var(--success-color);
+}
+
+.validacao-item.invalido {
+    background-color: rgba(245, 101, 101, 0.1);
+    color: var(--danger-color);
+}
+
+.historico-comandos {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.historico-item {
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.lab-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: 0.75rem;
+}
+
+/* ========================================
+   SIMULADOR DE SUBNETTING - ETAPA 7
+   ======================================== */
+
+.subnetting-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+.subnet-input-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-card {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+}
+
+.input-group-subnet {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.subnet-input {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-family: 'Courier New', monospace;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.subnet-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.quick-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.exemplos-rapidos {
+    margin-top: 1.5rem;
+}
+
+.exemplo-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.exemplo-tag {
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Courier New', monospace;
+}
+
+.exemplo-tag:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.subnet-resultado-container {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+}
+
+.subnet-result {
+    animation: fadeIn 0.3s;
+}
+
+.subnet-result.error {
+    background-color: rgba(245, 101, 101, 0.1);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    border-left: 4px solid var(--danger-color);
+}
+
+.subnet-result.success .result-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.subnet-result.success .result-section:last-child {
+    border-bottom: none;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.result-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.result-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.result-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+}
+
+.badge-classe, .badge-tipo {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+
+.result-addresses {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.address-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+}
+
+.address-icon {
+    font-size: 1.5rem;
+}
+
+.address-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.address-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.address-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    color: var(--text-primary);
+}
+
+.hosts-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.host-stat {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.75rem;
+    flex: 1;
+}
+
+.host-stat.primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.binary-table {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.binary-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.binary-table th, .binary-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.binary-table th {
+    background-color: var(--bg-tertiary);
+    font-weight: 600;
+}
+
+.binary {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.binary-table tr.highlight {
+    background-color: rgba(79, 70, 229, 0.1);
+}
+
+.cidr-reference {
+    margin-top: 1rem;
+}
+
+.cidr-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.cidr-table th, .cidr-table td {
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.cidr-table th {
+    background-color: var(--bg-tertiary);
+    font-weight: 600;
+}
+
+.cidr-table tr.current {
+    background-color: rgba(79, 70, 229, 0.2);
+    font-weight: 600;
+}
+
+.subnet-historico-panel {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.historico-item-subnet {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.historico-item-subnet:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* ========================================
+   PROGRESSO - ETAPA 8
+   ======================================== */
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+.stat-card.primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+}
+
+.stat-card.success {
+    border-left: 4px solid var(--success-color);
+}
+
+.stat-card.info {
+    border-left: 4px solid var(--info-color);
+}
+
+.stat-card.warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.stat-card.accent {
+    border-left: 4px solid var(--accent-color);
+}
+
+.stat-card.secondary {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.stat-icon {
+    font-size: 3rem;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
+
+.atividades-section {
+    margin-bottom: 3rem;
+}
+
+.atividades-list {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.atividade-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+}
+
+.atividade-tipo {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.atividade-conteudo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.atividade-data {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.dados-section {
+    margin-bottom: 3rem;
+}
+
+.dados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.dados-card {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.dados-card.danger {
+    border-top: 3px solid var(--danger-color);
+}
+
+.dados-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* ========================================
+   UTILIDADES E RESPONSIVIDADE
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .lab-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .subnetting-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .quiz-modulos-grid,
+    .simulados-grid,
+    .labs-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-overview {
+        grid-template-columns: 1fr;
+    }
+    
+    .dados-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.text-muted {
+    color: var(--text-secondary);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
