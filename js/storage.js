@@ -30,12 +30,27 @@ const StorageSystem = {
                 quizCompletos: 0,
                 simuladosCompletos: 0,
                 labsCompletos: 0,
-                modulos: Array(12).fill(0), // Progresso de cada módulo (0-100%)
+                modulos: [
+                    { id: 1, nome: 'Fundamentos de Redes', progresso: 0, status: 'nao-iniciado' },
+                    { id: 2, nome: 'Endereçamento IPv4', progresso: 0, status: 'nao-iniciado' },
+                    { id: 3, nome: 'IPv6', progresso: 0, status: 'nao-iniciado' },
+                    { id: 4, nome: 'VLAN / Trunk / MAC', progresso: 0, status: 'nao-iniciado' },
+                    { id: 5, nome: 'Spanning Tree Protocol', progresso: 0, status: 'nao-iniciado' },
+                    { id: 6, nome: 'EtherChannel', progresso: 0, status: 'nao-iniciado' },
+                    { id: 7, nome: 'Roteamento', progresso: 0, status: 'nao-iniciado' },
+                    { id: 8, nome: 'DHCP, DNS, NTP', progresso: 0, status: 'nao-iniciado' },
+                    { id: 9, nome: 'NAT/PAT', progresso: 0, status: 'nao-iniciado' },
+                    { id: 10, nome: 'Segurança', progresso: 0, status: 'nao-iniciado' },
+                    { id: 11, nome: 'Redes Wireless', progresso: 0, status: 'nao-iniciado' },
+                    { id: 12, nome: 'Automação e SDN', progresso: 0, status: 'nao-iniciado' }
+                ],
                 ultimoAcesso: new Date().toISOString(),
                 tempoTotal: 0, // Em minutos
                 atividades: []
             };
             this.salvarProgresso(progressoInicial);
+            // Também salvar na chave alternativa para compatibilidade
+            localStorage.setItem('academiaRedesProgress', JSON.stringify(progressoInicial));
         }
 
         if (!localStorage.getItem(this.keys.settings)) {
@@ -62,6 +77,8 @@ const StorageSystem = {
     salvarProgresso(progresso) {
         progresso.ultimoAcesso = new Date().toISOString();
         localStorage.setItem(this.keys.progress, JSON.stringify(progresso));
+        // Também salvar na chave alternativa para compatibilidade com App.js
+        localStorage.setItem('academiaRedesProgress', JSON.stringify(progresso));
     },
 
     carregarProgresso() {
@@ -75,7 +92,20 @@ const StorageSystem = {
             quizCompletos: 0,
             simuladosCompletos: 0,
             labsCompletos: 0,
-            modulos: Array(12).fill(0),
+            modulos: [
+                { id: 1, nome: 'Fundamentos de Redes', progresso: 0, status: 'nao-iniciado' },
+                { id: 2, nome: 'Endereçamento IPv4', progresso: 0, status: 'nao-iniciado' },
+                { id: 3, nome: 'IPv6', progresso: 0, status: 'nao-iniciado' },
+                { id: 4, nome: 'VLAN / Trunk / MAC', progresso: 0, status: 'nao-iniciado' },
+                { id: 5, nome: 'Spanning Tree Protocol', progresso: 0, status: 'nao-iniciado' },
+                { id: 6, nome: 'EtherChannel', progresso: 0, status: 'nao-iniciado' },
+                { id: 7, nome: 'Roteamento', progresso: 0, status: 'nao-iniciado' },
+                { id: 8, nome: 'DHCP, DNS, NTP', progresso: 0, status: 'nao-iniciado' },
+                { id: 9, nome: 'NAT/PAT', progresso: 0, status: 'nao-iniciado' },
+                { id: 10, nome: 'Segurança', progresso: 0, status: 'nao-iniciado' },
+                { id: 11, nome: 'Redes Wireless', progresso: 0, status: 'nao-iniciado' },
+                { id: 12, nome: 'Automação e SDN', progresso: 0, status: 'nao-iniciado' }
+            ],
             ultimoAcesso: new Date().toISOString(),
             tempoTotal: 0,
             atividades: []
@@ -116,6 +146,165 @@ const StorageSystem = {
         const progresso = this.carregarProgresso();
         progresso.tempoTotal += minutos;
         this.salvarProgresso(progresso);
+    },
+
+    // ========================================
+    // RESET DE PROGRESSO
+    // ========================================
+
+    resetarProgresso() {
+        const confirmacao = confirm(
+            '⚠️ ATENÇÃO: Resetar Progresso dos Módulos\n\n' +
+            'Esta ação irá:\n' +
+            '✗ Apagar o progresso de TODOS os 12 módulos\n' +
+            '✗ Remover a marcação de módulos concluídos\n' +
+            '✗ Limpar o histórico de atividades dos módulos\n\n' +
+            '✓ MANTER: Resultados de Quiz, Simulados e Labs\n' +
+            '✓ MANTER: Histórico de subnetting\n' +
+            '✓ MANTER: Configurações do sistema\n\n' +
+            'Deseja continuar?'
+        );
+
+        if (!confirmacao) {
+            return {
+                sucesso: false,
+                mensagem: 'Operação cancelada pelo usuário'
+            };
+        }
+
+        // Segunda confirmação de segurança
+        const confirmacaoFinal = confirm(
+            '🚨 CONFIRMAÇÃO FINAL\n\n' +
+            'Você tem certeza absoluta que deseja resetar o progresso dos módulos?\n\n' +
+            'Digite OK na próxima tela para confirmar.'
+        );
+
+        if (!confirmacaoFinal) {
+            return {
+                sucesso: false,
+                mensagem: 'Operação cancelada pelo usuário'
+            };
+        }
+
+        try {
+            // Resetar apenas o progresso dos módulos
+            const progressoResetado = {
+                modulosCompletos: 0,
+                quizCompletos: 0, // Mantém a contagem (será recalculada)
+                simuladosCompletos: 0, // Mantém a contagem (será recalculada)
+                labsCompletos: 0, // Mantém a contagem (será recalculada)
+                modulos: [
+                    { id: 1, nome: 'Fundamentos de Redes', progresso: 0, status: 'nao-iniciado' },
+                    { id: 2, nome: 'Endereçamento IPv4', progresso: 0, status: 'nao-iniciado' },
+                    { id: 3, nome: 'IPv6', progresso: 0, status: 'nao-iniciado' },
+                    { id: 4, nome: 'VLAN / Trunk / MAC', progresso: 0, status: 'nao-iniciado' },
+                    { id: 5, nome: 'Spanning Tree Protocol', progresso: 0, status: 'nao-iniciado' },
+                    { id: 6, nome: 'EtherChannel', progresso: 0, status: 'nao-iniciado' },
+                    { id: 7, nome: 'Roteamento', progresso: 0, status: 'nao-iniciado' },
+                    { id: 8, nome: 'DHCP, DNS, NTP', progresso: 0, status: 'nao-iniciado' },
+                    { id: 9, nome: 'NAT/PAT', progresso: 0, status: 'nao-iniciado' },
+                    { id: 10, nome: 'Segurança', progresso: 0, status: 'nao-iniciado' },
+                    { id: 11, nome: 'Redes Wireless', progresso: 0, status: 'nao-iniciado' },
+                    { id: 12, nome: 'Automação e SDN', progresso: 0, status: 'nao-iniciado' }
+                ],
+                ultimoAcesso: new Date().toISOString(),
+                tempoTotal: 0, // Resetar tempo
+                atividades: [{
+                    tipo: 'sistema',
+                    descricao: '🔄 Progresso dos módulos resetado',
+                    data: new Date().toISOString()
+                }]
+            };
+
+            // Recalcular contadores baseados nos dados existentes
+            const quizResults = JSON.parse(localStorage.getItem(this.keys.quizResults)) || {};
+            const simuladoResults = JSON.parse(localStorage.getItem(this.keys.simuladoResults)) || {};
+            const labResults = JSON.parse(localStorage.getItem(this.keys.labResults)) || {};
+
+            progressoResetado.quizCompletos = Object.keys(quizResults).length;
+            progressoResetado.simuladosCompletos = Object.keys(simuladoResults).length;
+            progressoResetado.labsCompletos = Object.keys(labResults).length;
+
+            // Salvar em AMBAS as chaves para compatibilidade
+            this.salvarProgresso(progressoResetado);
+            localStorage.setItem('academiaRedesProgress', JSON.stringify(progressoResetado));
+
+            return {
+                sucesso: true,
+                mensagem: '✓ Progresso dos módulos resetado com sucesso!\n\n' +
+                         'Os resultados de Quiz, Simulados e Labs foram mantidos.',
+                dados: progressoResetado
+            };
+
+        } catch (erro) {
+            console.error('Erro ao resetar progresso:', erro);
+            return {
+                sucesso: false,
+                mensagem: '✗ Erro ao resetar progresso: ' + erro.message
+            };
+        }
+    },
+
+    resetarTudo() {
+        const confirmacao = confirm(
+            '🚨 PERIGO: RESET COMPLETO\n\n' +
+            'Esta ação irá APAGAR PERMANENTEMENTE:\n' +
+            '✗ Progresso de TODOS os módulos\n' +
+            '✗ Resultados de TODOS os Quiz\n' +
+            '✗ Resultados de TODOS os Simulados\n' +
+            '✗ Resultados de TODOS os Labs\n' +
+            '✗ Histórico de Subnetting\n' +
+            '✗ Histórico de Troubleshooting\n' +
+            '✗ Todo o tempo de estudo registrado\n' +
+            '✗ Todas as atividades\n\n' +
+            '⚠️ ESTA AÇÃO NÃO PODE SER DESFEITA!\n\n' +
+            'Deseja continuar?'
+        );
+
+        if (!confirmacao) {
+            return {
+                sucesso: false,
+                mensagem: 'Operação cancelada pelo usuário'
+            };
+        }
+
+        const senhaSeguranca = prompt(
+            'Para confirmar, digite: RESETAR TUDO\n\n' +
+            '(exatamente como está escrito, em maiúsculas)'
+        );
+
+        if (senhaSeguranca !== 'RESETAR TUDO') {
+            return {
+                sucesso: false,
+                mensagem: 'Confirmação incorreta. Operação cancelada.'
+            };
+        }
+
+        try {
+            // Limpar todos os dados
+            localStorage.removeItem(this.keys.progress);
+            localStorage.removeItem(this.keys.quizResults);
+            localStorage.removeItem(this.keys.simuladoResults);
+            localStorage.removeItem(this.keys.labResults);
+            localStorage.removeItem(this.keys.subnettingHistory);
+            localStorage.removeItem('troubleshootingResultados');
+
+            // Recriar estrutura inicial
+            this.criarEstruturaInicial();
+
+            return {
+                sucesso: true,
+                mensagem: '✓ Todos os dados foram apagados com sucesso!\n\n' +
+                         'A página será recarregada.'
+            };
+
+        } catch (erro) {
+            console.error('Erro ao limpar dados:', erro);
+            return {
+                sucesso: false,
+                mensagem: '✗ Erro ao limpar dados: ' + erro.message
+            };
+        }
     },
 
     // ========================================

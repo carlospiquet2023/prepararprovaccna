@@ -260,6 +260,179 @@ const SubnettingSystem = {
         return `${ip}/${cidr}`;
     },
 
+    // **NOVA FUNCIONALIDADE: Calcular sub-redes divididas**
+    calcularSubredes(ipCidr, numSubredes) {
+        try {
+            const resultado = this.calcular(ipCidr);
+            if (resultado.erro) return resultado;
+
+            const cidrOriginal = resultado.cidr;
+            const bitsNecessarios = Math.ceil(Math.log2(numSubredes));
+            const novoCidr = cidrOriginal + bitsNecessarios;
+
+            if (novoCidr > 32) {
+                throw new Error('Impossível criar tantas sub-redes com este IP');
+            }
+
+            const subredes = [];
+            const redeOctets = resultado.enderecoRede.split('.').map(Number);
+            
+            for (let i = 0; i < numSubredes; i++) {
+                const subrede = this.calcularSubredeN(redeOctets, cidrOriginal, novoCidr, i);
+                subredes.push(subrede);
+            }
+
+            return {
+                ipOriginal: ipCidr,
+                cidrOriginal: cidrOriginal,
+                novoCidr: novoCidr,
+                bitsUsados: bitsNecessarios,
+                subredesCriadas: Math.pow(2, bitsNecessarios),
+                hostsUteisPorSubrede: this.calcularHostsUteis(novoCidr),
+                subredes: subredes
+            };
+
+        } catch (erro) {
+            return { erro: erro.message };
+        }
+    },
+
+    calcularSubredeN(redeBase, cidrOriginal, novoCidr, n) {
+        const blockSize = Math.pow(2, 32 - novoCidr);
+        const incremento = blockSize;
+        
+        let ip = (redeBase[0] << 24) + (redeBase[1] << 16) + (redeBase[2] << 8) + redeBase[3];
+        ip += n * incremento;
+        
+        const oct1 = (ip >>> 24) & 0xFF;
+        const oct2 = (ip >>> 16) & 0xFF;
+        const oct3 = (ip >>> 8) & 0xFF;
+        const oct4 = ip & 0xFF;
+        
+        const enderecoRede = `${oct1}.${oct2}.${oct3}.${oct4}`;
+        const resultado = this.calcular(`${enderecoRede}/${novoCidr}`);
+        
+        return {
+            numero: n + 1,
+            rede: resultado.enderecoRede,
+            primeiroHost: resultado.primeiroHost,
+            ultimoHost: resultado.ultimoHost,
+            broadcast: resultado.broadcast,
+            hostsUteis: resultado.hostsUteis
+        };
+    },
+
+    // **NOVA FUNCIONALIDADE: VLSM Calculator**
+    calcularVLSM(ipCidr, requisitos) {
+        try {
+            // requisitos = [{nome: 'Vendas', hosts: 50}, {nome: 'TI', hosts: 20}, ...]
+            // Ordenar por número de hosts (maior primeiro)
+            const ordenados = requisitos.sort((a, b) => b.hosts - a.hosts);
+            
+            const resultado = this.calcular(ipCidr);
+            if (resultado.erro) return resultado;
+
+            const subredes = [];
+            let ipDisponivel = resultado.enderecoRede.split('.').map(Number);
+
+            for (let req of ordenados) {
+                const hostsNecessarios = req.hosts + 2; // +2 para rede e broadcast
+                let cidr = 32;
+                
+                // Encontrar CIDR que acomoda hosts necessários
+                for (let c = 1; c <= 30; c++) {
+                    if (Math.pow(2, 32 - c) >= hostsNecessarios) {
+                        cidr = c;
+                    }
+                }
+
+                const ipStr = ipDisponivel.join('.') + `/${cidr}`;
+                const sub = this.calcular(ipStr);
+                
+                if (sub.erro) {
+                    throw new Error(`Espaço insuficiente para ${req.nome}`);
+                }
+
+                subredes.push({
+                    nome: req.nome,
+                    hostsRequisitados: req.hosts,
+                    hostsDisponiveis: sub.hostsUteis,
+                    rede: sub.enderecoRede,
+                    cidr: cidr,
+                    mascara: sub.mascara,
+                    primeiroHost: sub.primeiroHost,
+                    ultimoHost: sub.ultimoHost,
+                    broadcast: sub.broadcast
+                });
+
+                // Avançar para próxima rede disponível
+                const proxima = sub.proximaRede.split('.').map(Number);
+                ipDisponivel = proxima;
+            }
+
+            return {
+                ipOriginal: ipCidr,
+                subredes: subredes,
+                totalSubredes: subredes.length
+            };
+
+        } catch (erro) {
+            return { erro: erro.message };
+        }
+    },
+
+    // **NOVA FUNCIONALIDADE: Verificar se IP está em rede**
+    verificarIPnaRede(ip, rede) {
+        try {
+            const resultadoRede = this.calcular(rede);
+            if (resultadoRede.erro) return resultadoRede;
+
+            const ipOctets = ip.split('.').map(Number);
+            const redeOctets = resultadoRede.enderecoRede.split('.').map(Number);
+            const broadcastOctets = resultadoRede.broadcast.split('.').map(Number);
+
+            const ipNum = (ipOctets[0] << 24) + (ipOctets[1] << 16) + (ipOctets[2] << 8) + ipOctets[3];
+            const redeNum = (redeOctets[0] << 24) + (redeOctets[1] << 16) + (redeOctets[2] << 8) + redeOctets[3];
+            const broadcastNum = (broadcastOctets[0] << 24) + (broadcastOctets[1] << 16) + (broadcastOctets[2] << 8) + broadcastOctets[3];
+
+            const estaEntre = ipNum >= redeNum && ipNum <= broadcastNum;
+            const eRede = ipNum === redeNum;
+            const eBroadcast = ipNum === broadcastNum;
+
+            return {
+                ip: ip,
+                rede: rede,
+                estaEntre: estaEntre,
+                tipo: eRede ? 'Endereço de Rede' : (eBroadcast ? 'Broadcast' : (estaEntre ? 'Host Válido' : 'Fora da Rede')),
+                detalhes: {
+                    enderecoRede: resultadoRede.enderecoRede,
+                    broadcast: resultadoRede.broadcast,
+                    rangeHosts: `${resultadoRede.primeiroHost} - ${resultadoRede.ultimoHost}`
+                }
+            };
+
+        } catch (erro) {
+            return { erro: erro.message };
+        }
+    },
+
+    // **NOVA FUNCIONALIDADE: Converter máscara para CIDR**
+    mascaraParaCIDR(mascara) {
+        try {
+            const octetos = mascara.split('.').map(Number);
+            if (octetos.length !== 4) throw new Error('Máscara inválida');
+            
+            let cidr = 0;
+            for (let oct of octetos) {
+                cidr += oct.toString(2).split('1').length - 1;
+            }
+            
+            return cidr;
+        } catch (erro) {
+            return null;
+        }
+    },
+
     // Renderizar resultado
     renderizarResultado(resultado) {
         if (resultado.erro) {

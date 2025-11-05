@@ -47,6 +47,10 @@
                         <span class="menu-icon">🔬</span>
                         <span class="menu-text">Labs Práticos</span>
                     </li>
+                    <li class="menu-item" data-page="troubleshooting">
+                        <span class="menu-icon">🔍</span>
+                        <span class="menu-text">Troubleshooting</span>
+                    </li>
                     <li class="menu-item" data-page="subnetting">
                         <span class="menu-icon">🔢</span>
                         <span class="menu-text">Simulador Subnetting</span>
@@ -74,7 +78,101 @@
             </div>
         </main>
     </div>
-
+    
+    <!-- Rodapé -->
+    <footer class="site-footer">
+                <div class="footer-container">
+                    
+                    <!-- Seção Principal -->
+                    <div class="footer-section footer-main">
+                        <h3 class="footer-logo">Academia de Redes</h3>
+                        <p class="footer-tagline">Sistema Educacional para Certificação CCNA</p>
+                        <p class="footer-description">
+                            Plataforma educacional interativa desenvolvida para auxiliar estudantes 
+                            de redes de computadores na preparação para a certificação Cisco CCNA.
+                        </p>
+                    </div>
+                    
+                    <!-- Links Rápidos -->
+                    <div class="footer-section footer-links">
+                        <h4 class="footer-title">Links Rápidos</h4>
+                        <ul class="footer-list">
+                            <li><a href="#" class="footer-link" onclick="App.navigateTo('dashboard')">Dashboard</a></li>
+                            <li><a href="#" class="footer-link" onclick="App.navigateTo('modulos')">Módulos Teóricos</a></li>
+                            <li><a href="#" class="footer-link" onclick="App.navigateTo('quiz')">Quiz Interativo</a></li>
+                            <li><a href="#" class="footer-link" onclick="App.navigateTo('simulados')">Simulados</a></li>
+                            <li><a href="#" class="footer-link" onclick="App.navigateTo('labs')">Labs Práticos</a></li>
+                            <li><a href="#" class="footer-link" onclick="App.navigateTo('subnetting')">Calculadora de Subnetting</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Documentos Legais -->
+                    <div class="footer-section footer-legal">
+                        <h4 class="footer-title">Documentos</h4>
+                        <ul class="footer-list">
+                            <li><a href="termos_de_uso.md" target="_blank" class="footer-link">Termos de Uso</a></li>
+                            <li><a href="licenca_proprietaria.md" target="_blank" class="footer-link">Licença Proprietária</a></li>
+                            <li><a href="aviso_autoria.txt" target="_blank" class="footer-link">Aviso de Autoria</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Contato -->
+                    <div class="footer-section footer-contact">
+                        <h4 class="footer-title">Contato</h4>
+                        <p class="footer-contact-info">
+                            <strong>Desenvolvedor:</strong><br>
+                            Carlos Antonio de Oliveira Piquet
+                        </p>
+                        <p class="footer-contact-info">
+                            <strong>E-mail:</strong><br>
+                            <a href="mailto:carlospiquet.projetos@gmail.com" class="footer-email">
+                                carlospiquet.projetos@gmail.com
+                            </a>
+                        </p>
+                    </div>
+                    
+                </div>
+                
+                <!-- Divisória -->
+                <hr class="footer-divider">
+                
+                <!-- Copyright -->
+                <div class="footer-bottom">
+                    <div class="footer-copyright">
+                        <p>
+                            <strong>© 2025 Carlos Antonio de Oliveira Piquet</strong> - 
+                            Todos os Direitos Reservados
+                        </p>
+                    </div>
+                    
+                    <!-- Aviso Legal Compacto -->
+                    <div class="footer-ip-notice">
+                        <p class="footer-disclaimer">
+                            <strong>⚠️ Aviso Legal:</strong> 
+                            Este software é protegido por direitos autorais (Lei nº 9.610/1998). 
+                            É proibida a cópia, modificação, distribuição ou uso comercial não autorizado.
+                        </p>
+                    </div>
+                    
+                    <!-- Tecnologias -->
+                    <div class="footer-tech">
+                        <p class="footer-tech-info">
+                            <strong>Tecnologias:</strong> HTML5 | CSS3 | JavaScript ES6+ | LocalStorage API
+                        </p>
+                    </div>
+                    
+                    <!-- Versão -->
+                    <div class="footer-version">
+                        <p class="footer-version-info">
+                            <strong>Versão:</strong> 3.0 | <strong>Atualização:</strong> 05 de novembro de 2025
+                        </p>
+                    </div>
+                    
+                </div>
+                
+            </footer>
+        </main>
+    </div>
     <!-- Modal de Configurações -->
     <div class="modal" id="modalConfig">
         <div class="modal-content">
@@ -102,11 +200,15 @@
 
     <!-- Scripts -->
     <script src="js/storage.js"></script>
+    <script src="js/questoes_extra.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/simulados.js"></script>
     <script src="js/labs.js"></script>
+    <script src="js/troubleshooting.js"></script>
     <script src="js/subnetting.js"></script>
     <script src="js/modulos.js"></script>
     <script src="js/app.js"></script>
+
+    
 </body>
 </html>
