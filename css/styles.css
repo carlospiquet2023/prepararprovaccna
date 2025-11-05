@@ -68,6 +68,51 @@ body {
 }
 
 /* ========================================
+   CORREÇÃO CRÍTICA DE CONTRASTE
+   ======================================== */
+
+/* TEMA CLARO - Força texto preto em TODO o conteúdo */
+body:not(.dark-theme) {
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+body:not(.dark-theme) * {
+    color: #1e293b;
+}
+
+body:not(.dark-theme) h1,
+body:not(.dark-theme) h2, 
+body:not(.dark-theme) h3,
+body:not(.dark-theme) h4,
+body:not(.dark-theme) h5,
+body:not(.dark-theme) h6,
+body:not(.dark-theme) p,
+body:not(.dark-theme) li,
+body:not(.dark-theme) span:not(.logo-icon),
+body:not(.dark-theme) div,
+body:not(.dark-theme) label,
+body:not(.dark-theme) a {
+    color: #1e293b !important;
+}
+
+/* Exceções para elementos com fundo escuro */
+body:not(.dark-theme) .header,
+body:not(.dark-theme) .quiz-intro-card,
+body:not(.dark-theme) .btn-primary,
+body:not(.dark-theme) .menu-item.active {
+    color: #ffffff !important;
+}
+
+body:not(.dark-theme) .header *,
+body:not(.dark-theme) .quiz-intro-card *,
+body:not(.dark-theme) .btn-primary *,
+body:not(.dark-theme) .menu-item.active * {
+    color: #ffffff !important;
+}
+
+
+/* ========================================
    HEADER
    ======================================== */
 .header {
@@ -149,13 +194,14 @@ body {
     top: var(--header-height);
     width: var(--sidebar-width);
     height: calc(100vh - var(--header-height));
-    background-color: var(--bg-primary);
-    border-right: 1px solid var(--border-color);
+    background-color: #ffffff; /* Fundo branco puro */
+    border-right: 2px solid var(--border-color);
     display: flex;
     flex-direction: column;
     transition: var(--transition-normal);
     overflow-y: auto;
     z-index: 900;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05); /* Sombra sutil */
 }
 
 .sidebar.collapsed {
@@ -182,45 +228,54 @@ body {
     padding: 1rem 1.5rem;
     cursor: pointer;
     transition: var(--transition-fast);
-    color: var(--text-secondary);
+    color: #1e293b; /* Texto escuro para melhor contraste */
     font-weight: 500;
+    background-color: white;
 }
 
 .menu-item:hover {
     background-color: var(--bg-tertiary);
-    color: var(--text-primary);
+    color: #0f172a; /* Texto mais escuro no hover */
+    font-weight: 600;
 }
 
 .menu-item.active {
     background-color: var(--primary-light);
     color: white;
     border-right: 4px solid var(--primary-dark);
+    font-weight: 600;
 }
 
 .menu-icon {
     font-size: 1.5rem;
     min-width: 1.5rem;
     text-align: center;
+    color: inherit; /* Herda a cor do menu-item */
 }
 
 .menu-text {
     white-space: nowrap;
     transition: var(--transition-normal);
+    color: inherit; /* Herda a cor do menu-item */
+    font-size: 0.95rem;
 }
 
 .sidebar-footer {
     padding: 1rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 2px solid var(--border-color);
+    background-color: #f8fafc;
 }
 
 .btn-toggle-sidebar {
     width: 100%;
     padding: 0.75rem;
-    background-color: var(--bg-tertiary);
+    background-color: #e2e8f0;
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: var(--transition-fast);
+    color: #1e293b;
+    font-weight: 600;
     font-size: 1.25rem;
 }
 
@@ -424,8 +479,10 @@ body {
 }
 
 /* ========================================
-   RESPONSIVIDADE
+   RESPONSIVIDADE ANTIGA - DESATIVADA
+   (Substituída pela nova seção responsiva no final do arquivo)
    ======================================== */
+/* Comentado para evitar conflitos com o novo CSS responsivo
 @media (max-width: 768px) {
     .header-content {
         padding: 0 1rem;
@@ -456,6 +513,7 @@ body {
         display: none;
     }
 }
+*/
 
 @media (max-width: 480px) {
     .sidebar {
@@ -3515,6 +3573,18 @@ body {
     margin-bottom: 2rem;
 }
 
+/* Tema claro - texto branco no card introdutório */
+body:not(.dark-theme) .quiz-intro-card {
+    color: white !important;
+}
+
+body:not(.dark-theme) .quiz-intro-card h2,
+body:not(.dark-theme) .quiz-intro-card h3,
+body:not(.dark-theme) .quiz-intro-card p,
+body:not(.dark-theme) .quiz-intro-card li {
+    color: white !important;
+}
+
 .quiz-features {
     list-style: none;
     padding: 0;
@@ -3524,6 +3594,7 @@ body {
 .quiz-features li {
     padding: 0.5rem 0;
     font-size: 1.05rem;
+    color: inherit;
 }
 
 .quiz-modulos-grid {
@@ -3540,6 +3611,19 @@ body {
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
+    color: var(--text-primary);
+}
+
+/* Garante texto escuro nos cards de módulo (tema claro) */
+body:not(.dark-theme) .quiz-modulo-card {
+    background-color: #ffffff;
+    color: #1e293b;
+}
+
+body:not(.dark-theme) .quiz-modulo-card h3,
+body:not(.dark-theme) .quiz-modulo-card p,
+body:not(.dark-theme) .quiz-modulo-card span {
+    color: #1e293b !important;
 }
 
 .quiz-modulo-card:hover {
@@ -5807,6 +5891,8 @@ body .sidebar.collapsed ~ .site-footer {
     .site-footer {
         padding: 25px 15px 15px;
         margin-top: 30px;
+        margin-left: 0 !important; /* Remove margin lateral no mobile */
+        width: 100% !important;
     }
     
     .footer-container {
@@ -5825,7 +5911,53 @@ body .sidebar.collapsed ~ .site-footer {
     .footer-ip-notice {
         padding: 8px 12px;
     }
+    
+    /* Garante legibilidade em mobile */
+    .footer-title {
+        font-size: 1rem;
+    }
+    
+    .footer-link,
+    .footer-contact-info,
+    .footer-description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+    
+    .footer-disclaimer {
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
 }
+
+/* Mobile - Rodapé ocupa 100% */
+@media screen and (max-width: 900px) {
+    .site-footer {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 30px 20px 20px !important;
+    }
+    
+    .footer-container {
+        grid-template-columns: 1fr !important;
+        gap: 25px;
+    }
+    
+    .footer-section {
+        text-align: left;
+        padding: 15px 0;
+    }
+    
+    .footer-main {
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .footer-bottom {
+        padding-top: 20px;
+    }
+}
+
 
 /* Animação de Entrada */
 .site-footer {
@@ -5842,3 +5974,475 @@ body .sidebar.collapsed ~ .site-footer {
         transform: translateY(0);
     }
 }
+
+
+/* ========================================
+   RESPONSIVIDADE E MOBILE FIRST
+   ======================================== */
+
+/* Botão Hambúrguer - Visível apenas no mobile */
+.btn-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+    transition: var(--transition-fast);
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-primary);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* Animação do hambúrguer para X */
+.btn-hamburger.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.btn-hamburger.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.btn-hamburger.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Overlay para fechar menu mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 899;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ========================================
+   MEDIA QUERIES - MOBILE
+   ======================================== */
+
+@media screen and (max-width: 900px) {
+    /* Header Mobile */
+    .btn-hamburger {
+        display: flex;
+    }
+    
+    .header-content {
+        padding: 0 1rem;
+    }
+    
+    .logo h1 {
+        font-size: 1.2rem;
+    }
+    
+    .logo-icon {
+        font-size: 1.5rem;
+    }
+    
+    .user-name {
+        display: none; /* Oculta nome do usuário no mobile */
+    }
+    
+    /* Sidebar Mobile - Menu Drawer */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 280px;
+        height: 100vh;
+        z-index: 1000;
+        box-shadow: var(--shadow-lg);
+        transition: left 0.3s ease;
+    }
+    
+    .sidebar.mobile-open {
+        left: 0;
+    }
+    
+    .sidebar.collapsed {
+        width: 280px; /* No mobile, sempre largura total */
+    }
+    
+    .sidebar.collapsed .menu-text {
+        display: block !important; /* Mostra texto no mobile mesmo quando "collapsed" */
+    }
+    
+    /* FORÇA exibição dos textos do menu no mobile */
+    .sidebar .menu-text {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .sidebar .menu-item {
+        display: flex !important;
+    }
+    
+    .sidebar .menu-item .menu-text {
+        display: inline-block !important;
+    }
+    
+    /* Esconde botão de toggle no mobile */
+    .sidebar-footer .btn-toggle-sidebar {
+        display: none;
+    }
+    
+    /* Content Area Mobile */
+    .content-area {
+        margin-left: 0;
+        padding: 1rem;
+        width: 100%;
+    }
+    
+    .sidebar.collapsed ~ .content-area {
+        margin-left: 0;
+    }
+    
+    /* Main Layout Mobile */
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    /* Modal Mobile */
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    /* Botões Mobile - Tamanho maior para toque */
+    .btn,
+    .btn-primary,
+    .btn-secondary,
+    .btn-success,
+    .btn-danger {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+        min-height: 48px; /* Tamanho mínimo recomendado para touch */
+    }
+    
+    /* Cards Mobile */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    /* Rodapé Mobile já está tratado acima */
+}
+
+/* ========================================
+   MEDIA QUERIES - TABLET
+   ======================================== */
+
+@media screen and (min-width: 901px) and (max-width: 1200px) {
+    .header-content {
+        padding: 0 1.5rem;
+    }
+    
+    .sidebar {
+        width: 220px;
+    }
+    
+    .content-area {
+        margin-left: 220px;
+    }
+}
+
+/* ========================================
+   MELHORIAS PARA PWA E MOBILE
+   ======================================== */
+
+/* Safe Area para dispositivos com notch */
+@supports (padding: max(0px)) {
+    .header {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+    
+    .sidebar {
+        padding-left: max(0px, env(safe-area-inset-left));
+    }
+    
+    .content-area {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+}
+
+/* Desabilita seleção de texto em botões no mobile */
+@media (hover: none) {
+    .btn,
+    .menu-item,
+    .btn-hamburger,
+    .btn-config {
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
+}
+
+/* Melhor suporte para orientação landscape no mobile */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+    .header {
+        --header-height: 56px;
+    }
+    
+    .sidebar {
+        width: 260px;
+    }
+}
+
+/* ========================================
+   ANIMAÇÕES MOBILE
+   ======================================== */
+
+@media screen and (max-width: 900px) {
+    /* Animação suave ao abrir menu */
+    .sidebar {
+        will-change: left;
+    }
+    
+    /* Animação de cards */
+    .card {
+        animation: slideInUp 0.3s ease-out;
+    }
+    
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+/* ========================================
+   ACESSIBILIDADE MOBILE
+   ======================================== */
+
+/* Aumenta área de toque */
+@media screen and (max-width: 900px) {
+    .menu-item {
+        padding: 1.25rem 1.5rem;
+        min-height: 56px;
+    }
+    
+    .btn-config {
+        padding: 0.75rem;
+        min-width: 48px;
+        min-height: 48px;
+    }
+}
+
+/* Focus visível para navegação por teclado */
+@media screen and (max-width: 900px) {
+    *:focus-visible {
+        outline: 3px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+}
+
+/* ========================================
+   MELHORIAS DE CONTRASTE E LEGIBILIDADE
+   ======================================== */
+
+/* Garante texto escuro em todos os elementos do menu */
+.sidebar-nav {
+    background-color: #ffffff;
+}
+
+.menu-list {
+    background-color: #ffffff;
+}
+
+/* Força contraste alto no menu */
+.menu-item {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+}
+
+.menu-item:not(.active) .menu-icon {
+    color: #475569;
+}
+
+.menu-item:not(.active) .menu-text {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+/* Hover com mais destaque */
+.menu-item:hover:not(.active) {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    transform: translateX(4px);
+}
+
+.menu-item:hover:not(.active) .menu-icon {
+    color: #2563eb;
+    transform: scale(1.1);
+}
+
+.menu-item:hover:not(.active) .menu-text {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* Item ativo com contraste perfeito */
+.menu-item.active {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border-right: 4px solid #1e40af;
+}
+
+.menu-item.active .menu-icon,
+.menu-item.active .menu-text {
+    color: #ffffff !important;
+}
+
+/* Tema escuro - melhora contraste também */
+body.dark-theme .sidebar {
+    background-color: #1e293b !important;
+}
+
+body.dark-theme .menu-item {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-theme .menu-item:not(.active) .menu-icon {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .menu-item:not(.active) .menu-text {
+    color: #f1f5f9 !important;
+}
+
+body.dark-theme .menu-item:hover:not(.active) {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme .menu-item:hover:not(.active) .menu-icon {
+    color: #60a5fa !important;
+}
+
+body.dark-theme .menu-item:hover:not(.active) .menu-text {
+    color: #ffffff !important;
+}
+
+/* TEMA ESCURO - MOBILE (telas menores) */
+@media screen and (max-width: 900px) {
+    body.dark-theme .sidebar {
+        background-color: #1e293b !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item {
+        background-color: #1e293b !important;
+        color: #ffffff !important;
+    }
+    
+    body.dark-theme .sidebar .menu-text {
+        color: #ffffff !important;
+    }
+    
+    body.dark-theme .sidebar .menu-icon {
+        color: #94a3b8 !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item:hover:not(.active) {
+        background-color: #334155 !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item:hover .menu-text {
+        color: #ffffff !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item:hover .menu-icon {
+        color: #60a5fa !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item.active {
+        background-color: #2563eb !important;
+        color: #ffffff !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item.active .menu-text {
+        color: #ffffff !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item.active .menu-icon {
+        color: #ffffff !important;
+    }
+}
+
+
+/* ========================================
+   GARANTIA DE VISIBILIDADE DOS TEXTOS
+   FORÇA DISPLAY EM TODAS AS SITUAÇÕES
+   ======================================== */
+
+/* Regra GLOBAL para garantir textos visíveis */
+.menu-text {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 0.95rem !important;
+    color: inherit !important;
+}
+
+/* Garante que menu-item sempre mostre conteúdo */
+.menu-item {
+    display: flex !important;
+    gap: 1rem !important;
+}
+
+/* Desktop - textos sempre visíveis */
+@media screen and (min-width: 901px) {
+    .menu-text {
+        display: inline-block !important;
+    }
+    
+    .sidebar:not(.collapsed) .menu-text {
+        display: inline-block !important;
+    }
+}
+
+/* Mobile - textos SEMPRE visíveis */
+@media screen and (max-width: 900px) {
+    .sidebar .menu-text {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        white-space: normal !important;
+        max-width: 180px;
+    }
+    
+    .sidebar.collapsed .menu-text {
+        display: inline-block !important;
+    }
+    
+    .menu-item {
+        padding: 1rem 1.5rem !important;
+        min-height: 56px !important;
+    }
+}
+

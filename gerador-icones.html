@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Ícones PWA - Academia de Redes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .icon-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .icon-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+        .icon-item canvas {
+            border-radius: 20%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+        }
+        .icon-item span {
+            display: block;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        button {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.02);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .info {
+            background: #dbeafe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2563eb;
+        }
+        .success {
+            background: #d1fae5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #10b981;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Gerador de Ícones PWA</h1>
+        
+        <div class="info">
+            <strong>📱 Instruções:</strong><br>
+            Este gerador cria ícones básicos para o PWA. Os ícones terão o emoji 🌐 ou uma cor personalizada.
+            Clique no botão abaixo para gerar e baixar todos os ícones necessários.
+        </div>
+
+        <button onclick="generateAllIcons()">🚀 Gerar Todos os Ícones</button>
+
+        <div class="icon-preview" id="iconPreview"></div>
+
+        <div class="success" id="successMessage">
+            ✅ <strong>Ícones gerados com sucesso!</strong><br>
+            Baixe cada ícone clicando com o botão direito → "Salvar imagem como..."
+        </div>
+    </div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+
+        function generateIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Fundo gradiente
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1e40af');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Adiciona emoji ou texto
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.5}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🌐', size / 2, size / 2);
+
+            // Adiciona bordas arredondadas (opcional)
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.15);
+            ctx.fill();
+
+            return canvas;
+        }
+
+        function generateAllIcons() {
+            const preview = document.getElementById('iconPreview');
+            const successMessage = document.getElementById('successMessage');
+            preview.innerHTML = '';
+
+            sizes.forEach(size => {
+                const canvas = generateIcon(size);
+                
+                // Container do ícone
+                const iconItem = document.createElement('div');
+                iconItem.className = 'icon-item';
+                
+                // Adiciona canvas
+                const displayCanvas = document.createElement('canvas');
+                displayCanvas.width = 128;
+                displayCanvas.height = 128;
+                const displayCtx = displayCanvas.getContext('2d');
+                displayCtx.drawImage(canvas, 0, 0, 128, 128);
+                iconItem.appendChild(displayCanvas);
+                
+                // Label
+                const label = document.createElement('span');
+                label.textContent = `icon-${size}.png`;
+                iconItem.appendChild(label);
+                
+                // Botão de download
+                const downloadBtn = document.createElement('button');
+                downloadBtn.textContent = '⬇️ Baixar';
+                downloadBtn.style.marginTop = '10px';
+                downloadBtn.style.padding = '8px 16px';
+                downloadBtn.style.fontSize = '0.9rem';
+                downloadBtn.onclick = () => {
+                    const link = document.createElement('a');
+                    link.download = `icon-${size}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                };
+                iconItem.appendChild(downloadBtn);
+                
+                preview.appendChild(iconItem);
+            });
+
+            successMessage.style.display = 'block';
+        }
+
+        // Adiciona suporte a roundRect se não existir
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                if (w < 2 * r) r = w / 2;
+                if (h < 2 * r) r = h / 2;
+                this.beginPath();
+                this.moveTo(x + r, y);
+                this.arcTo(x + w, y, x + w, y + h, r);
+                this.arcTo(x + w, y + h, x, y + h, r);
+                this.arcTo(x, y + h, x, y, r);
+                this.arcTo(x, y, x + w, y, r);
+                this.closePath();
+                return this;
+            };
+        }
+    </script>
+</body>
+</html>

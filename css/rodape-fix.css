@@ -1,0 +1,180 @@
+/* ========================================
+   RODAPÉ - CORREÇÃO DEFINITIVA
+   Este arquivo sobrescreve TUDO relacionado ao rodapé
+   ======================================== */
+
+/* RODAPÉ - CORES FIXAS (independente de tema) */
+.site-footer,
+body.dark-theme .site-footer,
+body:not(.dark-theme) .site-footer,
+html .site-footer,
+* .site-footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    color: #e0e0e0 !important;
+}
+
+/* TODOS os elementos dentro do rodapé devem ser CLAROS */
+.site-footer *,
+.site-footer h1,
+.site-footer h2,
+.site-footer h3,
+.site-footer h4,
+.site-footer h5,
+.site-footer h6,
+.site-footer p,
+.site-footer div,
+.site-footer span,
+.site-footer li,
+.site-footer ul,
+.site-footer ol,
+.site-footer label,
+.site-footer a,
+body.dark-theme .site-footer *,
+body.dark-theme .site-footer h1,
+body.dark-theme .site-footer h2,
+body.dark-theme .site-footer h3,
+body.dark-theme .site-footer h4,
+body.dark-theme .site-footer p,
+body.dark-theme .site-footer span,
+body.dark-theme .site-footer li,
+body:not(.dark-theme) .site-footer *,
+body:not(.dark-theme) .site-footer h1,
+body:not(.dark-theme) .site-footer h2,
+body:not(.dark-theme) .site-footer h3,
+body:not(.dark-theme) .site-footer p,
+body:not(.dark-theme) .site-footer span,
+body:not(.dark-theme) .site-footer li {
+    color: #e0e0e0 !important;
+}
+
+/* Títulos do rodapé em BRANCO */
+.site-footer h1,
+.site-footer h2,
+.site-footer h3,
+.site-footer h4,
+.site-footer .footer-logo,
+.site-footer strong,
+body.dark-theme .site-footer h1,
+body.dark-theme .site-footer h2,
+body.dark-theme .site-footer h3,
+body.dark-theme .site-footer .footer-logo,
+body.dark-theme .site-footer strong,
+body:not(.dark-theme) .site-footer h1,
+body:not(.dark-theme) .site-footer h2,
+body:not(.dark-theme) .site-footer h3,
+body:not(.dark-theme) .site-footer .footer-logo,
+body:not(.dark-theme) .site-footer strong {
+    color: #ffffff !important;
+}
+
+/* Links do rodapé */
+.site-footer .footer-link,
+.site-footer a:not(.footer-email),
+body.dark-theme .site-footer .footer-link,
+body:not(.dark-theme) .site-footer .footer-link {
+    color: #b0bec5 !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.site-footer .footer-link:hover,
+.site-footer a:not(.footer-email):hover,
+body.dark-theme .site-footer .footer-link:hover,
+body:not(.dark-theme) .site-footer .footer-link:hover {
+    color: #4fc3f7 !important;
+    text-decoration: underline !important;
+}
+
+/* Email em destaque */
+.site-footer .footer-email,
+body.dark-theme .site-footer .footer-email,
+body:not(.dark-theme) .site-footer .footer-email {
+    color: #4fc3f7 !important;
+    text-decoration: none !important;
+}
+
+.site-footer .footer-email:hover,
+body.dark-theme .site-footer .footer-email:hover,
+body:not(.dark-theme) .site-footer .footer-email:hover {
+    color: #81d4fa !important;
+    text-decoration: underline !important;
+}
+
+/* Texto disclaimer/aviso */
+.site-footer .footer-disclaimer,
+body.dark-theme .site-footer .footer-disclaimer,
+body:not(.dark-theme) .site-footer .footer-disclaimer {
+    color: #cfd8dc !important;
+}
+
+/* ========================================
+   RESPONSIVIDADE MOBILE
+   ======================================== */
+
+@media screen and (max-width: 900px) {
+    .site-footer,
+    body.dark-theme .site-footer,
+    body:not(.dark-theme) .site-footer {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100vw !important;
+        max-width: 100% !important;
+        padding: 25px 15px 20px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .footer-container {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+    
+    .footer-section {
+        width: 100% !important;
+        padding: 15px 0 !important;
+    }
+    
+    /* Aumenta fonte para legibilidade */
+    .site-footer .footer-logo {
+        font-size: 1.5rem !important;
+    }
+    
+    .site-footer .footer-title {
+        font-size: 1.1rem !important;
+    }
+    
+    .site-footer p,
+    .site-footer li,
+    .site-footer span,
+    .site-footer .footer-description,
+    .site-footer .footer-tagline,
+    .site-footer .footer-contact-info {
+        font-size: 0.95rem !important;
+        line-height: 1.7 !important;
+    }
+    
+    .site-footer .footer-link,
+    .site-footer .footer-email {
+        font-size: 0.95rem !important;
+        padding: 8px 0 !important;
+    }
+    
+    .site-footer .footer-disclaimer {
+        font-size: 0.85rem !important;
+        line-height: 1.6 !important;
+    }
+}
+
+/* Tablet */
+@media screen and (min-width: 901px) and (max-width: 1200px) {
+    .site-footer {
+        margin-left: 220px !important;
+    }
+}
+
+/* Desktop */
+@media screen and (min-width: 1201px) {
+    .site-footer {
+        margin-left: var(--sidebar-width) !important;
+    }
+}

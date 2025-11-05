@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Diagnóstico - Menu Academia de Redes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .status.success { background: #d1fae5; color: #065f46; }
+        .status.error { background: #fee2e2; color: #991b1b; }
+        .status.warning { background: #fef3c7; color: #92400e; }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+            border-radius: 4px;
+        }
+        
+        .sidebar-demo {
+            width: 280px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        
+        .menu-item-demo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .menu-item-demo:hover {
+            background: #f1f5f9;
+        }
+        
+        .menu-item-demo.active {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .menu-icon-demo {
+            font-size: 24px;
+        }
+        
+        .menu-text-demo {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        
+        .menu-item-demo.active .menu-text-demo {
+            color: white;
+        }
+        
+        .code {
+            background: #1e293b;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico do Menu Lateral - Academia de Redes</h1>
+        
+        <div id="browserInfo" class="status"></div>
+        
+        <div class="test-section">
+            <h2>✅ Demonstração - Como DEVE aparecer:</h2>
+            <p><strong>Se você vê os textos abaixo, o navegador está funcionando corretamente:</strong></p>
+            
+            <div class="sidebar-demo">
+                <div class="menu-item-demo active">
+                    <span class="menu-icon-demo">📊</span>
+                    <span class="menu-text-demo">Dashboard</span>
+                </div>
+                <div class="menu-item-demo">
+                    <span class="menu-icon-demo">📚</span>
+                    <span class="menu-text-demo">Módulos Teóricos</span>
+                </div>
+                <div class="menu-item-demo">
+                    <span class="menu-icon-demo">❓</span>
+                    <span class="menu-text-demo">Quiz</span>
+                </div>
+                <div class="menu-item-demo">
+                    <span class="menu-icon-demo">📝</span>
+                    <span class="menu-text-demo">Simulados</span>
+                </div>
+                <div class="menu-item-demo">
+                    <span class="menu-icon-demo">🔬</span>
+                    <span class="menu-text-demo">Labs Práticos</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Soluções Rápidas:</h2>
+            
+            <h3>1. Limpar Cache do Navegador</h3>
+            <p>Pressione: <strong>Ctrl + Shift + Delete</strong> e limpe o cache</p>
+            <button onclick="location.reload(true)">🔄 Recarregar Página (Force Reload)</button>
+            
+            <h3>2. Verificar Arquivos CSS</h3>
+            <p>Os seguintes arquivos devem existir:</p>
+            <div class="code">
+css/styles.css<br>
+css/menu-fix.css
+            </div>
+            <button onclick="checkFiles()">🔍 Verificar Arquivos</button>
+            <div id="fileCheck"></div>
+            
+            <h3>3. Testar sem Cache</h3>
+            <p>Abra em modo anônimo: <strong>Ctrl + Shift + N</strong> (Chrome) ou <strong>Ctrl + Shift + P</strong> (Firefox)</p>
+            
+            <h3>4. Verificar Console de Erros</h3>
+            <p>Pressione <strong>F12</strong> e veja se há erros na aba "Console"</p>
+            <button onclick="window.open('index.html', '_blank')">🚀 Abrir Site Principal</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>📱 Teste de Responsividade:</h2>
+            <button onclick="testResponsive()">📏 Testar Diferentes Tamanhos</button>
+            <div id="responsiveTest"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>💡 CSS Corretivo (Copie e Cole):</h2>
+            <p>Se o problema persistir, adicione este CSS no início do arquivo <code>css/styles.css</code>:</p>
+            <div class="code">
+/* CORREÇÃO URGENTE - VISIBILIDADE DO MENU */<br>
+.menu-text {<br>
+&nbsp;&nbsp;display: inline-block !important;<br>
+&nbsp;&nbsp;visibility: visible !important;<br>
+&nbsp;&nbsp;opacity: 1 !important;<br>
+&nbsp;&nbsp;color: #1e293b !important;<br>
+&nbsp;&nbsp;font-size: 15px !important;<br>
+}<br>
+<br>
+.menu-item {<br>
+&nbsp;&nbsp;display: flex !important;<br>
+&nbsp;&nbsp;gap: 12px !important;<br>
+}
+            </div>
+            <button onclick="copyCSS()">📋 Copiar CSS</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Checklist de Verificação:</h2>
+            <ul style="list-style: none; padding: 20px;">
+                <li>☐ Arquivo <code>css/styles.css</code> existe?</li>
+                <li>☐ Arquivo <code>css/menu-fix.css</code> existe?</li>
+                <li>☐ Cache do navegador foi limpo?</li>
+                <li>☐ Não há erros no console (F12)?</li>
+                <li>☐ Testou em modo anônimo?</li>
+                <li>☐ Testou em outro navegador?</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Informações do navegador
+        const info = document.getElementById('browserInfo');
+        info.className = 'status success';
+        info.innerHTML = `
+            ✅ Navegador: ${navigator.userAgent.match(/(Chrome|Firefox|Safari|Edge)/)?.[0] || 'Desconhecido'}<br>
+            📱 Largura da Tela: ${window.innerWidth}px<br>
+            💻 Sistema: ${navigator.platform}
+        `;
+        
+        // Verificar arquivos
+        async function checkFiles() {
+            const fileCheck = document.getElementById('fileCheck');
+            fileCheck.innerHTML = '<p>Verificando arquivos...</p>';
+            
+            const files = ['css/styles.css', 'css/menu-fix.css'];
+            let results = '';
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        results += `<div class="status success">✅ ${file} - OK (${response.status})</div>`;
+                    } else {
+                        results += `<div class="status error">❌ ${file} - ERRO (${response.status})</div>`;
+                    }
+                } catch (error) {
+                    results += `<div class="status error">❌ ${file} - NÃO ENCONTRADO</div>`;
+                }
+            }
+            
+            fileCheck.innerHTML = results;
+        }
+        
+        // Testar responsividade
+        function testResponsive() {
+            const test = document.getElementById('responsiveTest');
+            const width = window.innerWidth;
+            
+            if (width <= 900) {
+                test.innerHTML = `<div class="status warning">📱 MOBILE (${width}px) - Menu deve aparecer como drawer (gaveta)</div>`;
+            } else if (width <= 1200) {
+                test.innerHTML = `<div class="status warning">💻 TABLET (${width}px) - Sidebar reduzida</div>`;
+            } else {
+                test.innerHTML = `<div class="status success">🖥️ DESKTOP (${width}px) - Sidebar fixa à esquerda</div>`;
+            }
+        }
+        
+        // Copiar CSS
+        function copyCSS() {
+            const css = `.menu-text { display: inline-block !important; visibility: visible !important; opacity: 1 !important; color: #1e293b !important; font-size: 15px !important; } .menu-item { display: flex !important; gap: 12px !important; }`;
+            navigator.clipboard.writeText(css).then(() => {
+                alert('✅ CSS copiado! Cole no início do arquivo css/styles.css');
+            });
+        }
+        
+        // Executar testes ao carregar
+        window.addEventListener('load', () => {
+            testResponsive();
+        });
+        
+        window.addEventListener('resize', testResponsive);
+    </script>
+</body>
+</html>

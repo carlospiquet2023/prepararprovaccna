@@ -1,0 +1,477 @@
+/* ========================================
+   CSS CORRETIVO - VISIBILIDADE DO MENU
+   Adicione este arquivo DEPOIS do styles.css
+   ======================================== */
+
+/* FORÇA visibilidade dos textos do menu */
+.menu-text {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #1e293b !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+}
+
+/* Menu item sempre flex */
+.menu-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 1rem 1.5rem !important;
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+}
+
+/* Hover */
+.menu-item:hover:not(.active) .menu-text {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+/* Ativo */
+.menu-item.active .menu-text {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Sidebar sempre com fundo branco */
+.sidebar {
+    background-color: #ffffff !important;
+}
+
+/* DESKTOP - Sidebar visível */
+@media screen and (min-width: 901px) {
+    .sidebar {
+        position: fixed !important;
+        left: 0 !important;
+        width: 260px !important;
+    }
+    
+    .menu-text {
+        display: inline-block !important;
+    }
+}
+
+/* MOBILE - Menu hambúrguer */
+@media screen and (max-width: 900px) {
+    /* Sidebar como drawer */
+    .sidebar {
+        position: fixed !important;
+        left: -100% !important;
+        top: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+        z-index: 1000 !important;
+        transition: left 0.3s ease !important;
+    }
+    
+    .sidebar.mobile-open {
+        left: 0 !important;
+    }
+    
+    /* TEXTOS SEMPRE VISÍVEIS NO MOBILE */
+    .sidebar .menu-text {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .sidebar.collapsed .menu-text {
+        display: inline-block !important;
+    }
+    
+    /* Content sem margin no mobile */
+    .content-area {
+        margin-left: 0 !important;
+    }
+}
+
+/* Remove qualquer display: none dos textos */
+.menu-text[style*="display: none"] {
+    display: inline-block !important;
+}
+
+.menu-text[hidden] {
+    display: inline-block !important;
+}
+
+/* ========================================
+   TEMA ESCURO - CORREÇÃO DE CORES
+   ======================================== */
+
+/* Tema escuro - Desktop e Mobile */
+body.dark-theme .sidebar {
+    background-color: #1e293b !important;
+}
+
+body.dark-theme .sidebar .menu-item {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme .sidebar .menu-text {
+    color: #ffffff !important;
+}
+
+body.dark-theme .sidebar .menu-icon {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .sidebar .menu-item:hover:not(.active) {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme .sidebar .menu-item:hover:not(.active) .menu-text {
+    color: #ffffff !important;
+}
+
+body.dark-theme .sidebar .menu-item:hover:not(.active) .menu-icon {
+    color: #60a5fa !important;
+}
+
+body.dark-theme .sidebar .menu-item.active {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme .sidebar .menu-item.active .menu-text {
+    color: #ffffff !important;
+}
+
+body.dark-theme .sidebar .menu-item.active .menu-icon {
+    color: #ffffff !important;
+}
+
+/* Tema escuro - Mobile específico */
+@media screen and (max-width: 900px) {
+    body.dark-theme .sidebar {
+        background-color: #0f172a !important;
+    }
+    
+    body.dark-theme .sidebar .menu-item {
+        background-color: #1e293b !important;
+    }
+    
+    body.dark-theme .sidebar .menu-text {
+        color: #ffffff !important;
+        font-weight: 500 !important;
+    }
+    
+    body.dark-theme .sidebar .menu-icon {
+        color: #cbd5e1 !important;
+    }
+}
+
+/* ========================================
+   CORREÇÃO DE CONTRASTE NO CONTEÚDO
+   FORÇA TEXTO PRETO EM FUNDO BRANCO
+   ======================================== */
+
+/* TEMA CLARO - FORÇA texto escuro GLOBALMENTE */
+body:not(.dark-theme) {
+    color: #1e293b !important;
+}
+
+body:not(.dark-theme) .content-area {
+    background-color: #f8fafc !important;
+    color: #1e293b !important;
+}
+
+body:not(.dark-theme) h1,
+body:not(.dark-theme) h2,
+body:not(.dark-theme) h3,
+body:not(.dark-theme) h4,
+body:not(.dark-theme) h5,
+body:not(.dark-theme) h6 {
+    color: #0f172a !important;
+}
+
+body:not(.dark-theme) p {
+    color: #1e293b !important;
+}
+
+body:not(.dark-theme) span:not(.menu-text):not(.logo-icon) {
+    color: #1e293b !important;
+}
+
+body:not(.dark-theme) li {
+    color: #1e293b !important;
+}
+
+body:not(.dark-theme) div:not(.sidebar):not(.header) {
+    color: #1e293b !important;
+}
+
+body:not(.dark-theme) label,
+body:not(.dark-theme) a:not(.btn) {
+    color: #1e293b !important;
+}
+
+/* Cards e elementos com fundo claro */
+body:not(.dark-theme) .card,
+body:not(.dark-theme) .quiz-modulo-card,
+body:not(.dark-theme) .stats-card {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+}
+
+body:not(.dark-theme) .card *,
+body:not(.dark-theme) .quiz-modulo-card *,
+body:not(.dark-theme) .stats-card * {
+    color: #1e293b !important;
+}
+
+/* EXCEÇÃO: Quiz intro card - mantém branco porque tem fundo azul */
+body:not(.dark-theme) .quiz-intro-card {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+}
+
+body:not(.dark-theme) .quiz-intro-card h1,
+body:not(.dark-theme) .quiz-intro-card h2,
+body:not(.dark-theme) .quiz-intro-card h3,
+body:not(.dark-theme) .quiz-intro-card h4,
+body:not(.dark-theme) .quiz-intro-card p,
+body:not(.dark-theme) .quiz-intro-card li,
+body:not(.dark-theme) .quiz-intro-card span {
+    color: #ffffff !important;
+}
+
+/* Remove cor branca de elementos genéricos */
+body:not(.dark-theme) * {
+    color: #1e293b;
+}
+
+body:not(.dark-theme) .content-area * {
+    color: #1e293b;
+}
+
+/* Tema ESCURO - Garante texto claro */
+body.dark-theme .content-area {
+    background-color: #0f172a;
+    color: #f1f5f9;
+}
+
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme h5,
+body.dark-theme h6 {
+    color: #f1f5f9 !important;
+}
+
+body.dark-theme p,
+body.dark-theme span,
+body.dark-theme li {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .card,
+body.dark-theme .quiz-modulo-card {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-theme .card *,
+body.dark-theme .quiz-modulo-card * {
+    color: #f1f5f9 !important;
+}
+
+/* ========================================
+   RODAPÉ - INDEPENDENTE DE TEMA
+   Sempre com as mesmas cores
+   ======================================== */
+
+/* Rodapé não é afetado por tema claro/escuro */
+.site-footer,
+body.dark-theme .site-footer,
+body:not(.dark-theme) .site-footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    color: #e0e0e0 !important;
+}
+
+.site-footer *,
+body.dark-theme .site-footer *,
+body:not(.dark-theme) .site-footer * {
+    color: #e0e0e0 !important;
+}
+
+.site-footer h1,
+.site-footer h2, 
+.site-footer h3,
+.site-footer h4,
+body.dark-theme .site-footer h1,
+body.dark-theme .site-footer h2,
+body.dark-theme .site-footer h3,
+body.dark-theme .site-footer h4 {
+    color: #ffffff !important;
+}
+
+.site-footer .footer-logo,
+body.dark-theme .site-footer .footer-logo {
+    color: #4fc3f7 !important;
+}
+
+.site-footer .footer-link,
+body.dark-theme .site-footer .footer-link {
+    color: #b0bec5 !important;
+    transition: color 0.3s ease;
+}
+
+.site-footer .footer-link:hover,
+body.dark-theme .site-footer .footer-link:hover {
+    color: #4fc3f7 !important;
+}
+
+.site-footer .footer-email,
+body.dark-theme .site-footer .footer-email {
+    color: #4fc3f7 !important;
+}
+
+.site-footer .footer-email:hover,
+body.dark-theme .site-footer .footer-email:hover {
+    color: #81d4fa !important;
+}
+
+.site-footer strong,
+body.dark-theme .site-footer strong {
+    color: #ffffff !important;
+}
+
+.site-footer .footer-disclaimer,
+body.dark-theme .site-footer .footer-disclaimer {
+    color: #cfd8dc !important;
+}
+
+.site-footer p,
+.site-footer li,
+.site-footer span:not(.footer-logo),
+body.dark-theme .site-footer p,
+body.dark-theme .site-footer li,
+body.dark-theme .site-footer span:not(.footer-logo) {
+    color: #e0e0e0 !important;
+}
+
+/* ========================================
+   RODAPÉ - RESPONSIVIDADE MOBILE
+   ======================================== */
+
+/* Mobile - Rodapé 100% largura */
+@media screen and (max-width: 900px) {
+    .site-footer,
+    body.dark-theme .site-footer,
+    body:not(.dark-theme) .site-footer {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        padding: 30px 15px 20px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .footer-container {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 0 !important;
+    }
+    
+    .footer-section {
+        width: 100% !important;
+        padding: 10px 0 !important;
+        text-align: left !important;
+    }
+    
+    .footer-logo {
+        font-size: 1.3rem !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .footer-tagline {
+        font-size: 0.85rem !important;
+    }
+    
+    .footer-description {
+        font-size: 0.85rem !important;
+        line-height: 1.6 !important;
+    }
+    
+    .footer-title {
+        font-size: 1rem !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .footer-list {
+        padding-left: 0 !important;
+    }
+    
+    .footer-list li {
+        margin-bottom: 8px !important;
+    }
+    
+    .footer-link {
+        font-size: 0.9rem !important;
+        display: block !important;
+        padding: 5px 0 !important;
+    }
+    
+    .footer-contact-info {
+        font-size: 0.85rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .footer-email {
+        font-size: 0.85rem !important;
+        word-break: break-word !important;
+    }
+    
+    .footer-bottom {
+        padding: 15px 0 !important;
+    }
+    
+    .footer-copyright {
+        font-size: 0.8rem !important;
+        text-align: center !important;
+    }
+    
+    .footer-ip-notice {
+        padding: 10px !important;
+        margin: 15px 0 !important;
+    }
+    
+    .footer-disclaimer {
+        font-size: 0.75rem !important;
+        line-height: 1.5 !important;
+    }
+    
+    .footer-tech-info,
+    .footer-version-info {
+        font-size: 0.75rem !important;
+        text-align: center !important;
+    }
+    
+    .footer-divider {
+        margin: 20px 0 !important;
+    }
+}
+
+/* Tablet */
+@media screen and (min-width: 901px) and (max-width: 1200px) {
+    .site-footer {
+        margin-left: 220px !important;
+    }
+}
+
+/* Desktop */
+@media screen and (min-width: 1201px) {
+    .site-footer {
+        margin-left: var(--sidebar-width) !important;
+    }
+}
+
+
+
+
